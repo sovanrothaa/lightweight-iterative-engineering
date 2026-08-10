@@ -1,3 +1,15 @@
+---
+name: lightweight-iterative-engineering
+description: >
+  A pragmatic, lightweight software engineering workflow for AI coding tasks
+  that prioritizes fast iteration, proportional process, and minimal
+  speculative work. Use when the user wants lightweight or pragmatic
+  engineering, minimal ceremony, conditional testing, no default TDD,
+  lightweight review, fast feedback, or a proportional alternative to
+  ceremony-heavy development workflows. Routes selectively to testing,
+  review, and debugging based on concrete signals and task risk.
+---
+
 # Lightweight Iterative Engineering
 
 ## Purpose
