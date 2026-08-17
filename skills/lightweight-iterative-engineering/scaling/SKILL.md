@@ -17,6 +17,8 @@ Dispatch only when:
 
 If the tasks are tightly coupled, or the main session already holds all the context needed, keep working inline. Dispatch has a fixed cost — paying it without a real isolation or focus benefit is waste.
 
+When multiple independent problem domains genuinely qualify (e.g. unrelated failures in different files or subsystems), dispatch all of them in a single message — multiple dispatches in one message run in parallel; one dispatch per message runs them sequentially and burns wall-clock time for no benefit.
+
 ---
 
 ## Model Selection

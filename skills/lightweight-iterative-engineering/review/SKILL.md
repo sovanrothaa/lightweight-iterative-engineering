@@ -34,6 +34,12 @@ Do not automatically create:
 
 ---
 
+## Dispatching a Reviewer
+
+When the reviewer is a subagent, hand it the diff (as a file, or a precise commit range) and what the change should do — not the dispatcher's own session history. A reviewer evaluates the work product; re-deriving how you got there wastes its context and yours.
+
+---
+
 ## Risk-Based Escalation
 
 Escalate review when the change involves meaningful risk.
@@ -123,13 +129,15 @@ When possible, verify findings with evidence before reporting them.
 
 ---
 
-## Fixing Findings
+## Responding to Findings
 
 When a review identifies an issue:
 
-1. Fix the issue.
-2. Run relevant verification.
-3. Re-check the affected area.
+1. Verify it against the actual codebase before acting on it — don't implement on the reviewer's word alone.
+2. If it's correct: fix it, and say so plainly ("Fixed — <what changed>"). Skip performative agreement ("You're absolutely right!", "Great catch!") — the fix is the response.
+3. If it looks wrong: push back with technical reasoning — what you checked, and why the finding doesn't hold here.
+4. If the finding is "implement this properly" or otherwise scope-expanding: check actual usage first. Unused code stays unused (YAGNI) even when a reviewer suggests hardening it.
+5. Run relevant verification and re-check the affected area.
 
 Do not restart the entire review process unless the changes materially alter the implementation.
 

@@ -4,7 +4,7 @@ A lightweight AI-assisted software engineering skill focused on **fast iteration
 
 LIE is a reaction to "ceremony-heavy" agent workflows that default to TDD on every task, multi-agent review pipelines for trivial changes, and clarifying questions where a five-second local check would answer the question instead. It keeps the parts of that discipline that matter (mandatory review, evidence-based verification, systematic debugging) and cuts the parts that don't scale with task size.
 
-> v0.2 — early and unpolished. Structure and rules will change as it gets used on real tasks.
+> v0.3 — early and unpolished. Structure and rules will change as it gets used on real tasks.
 
 ---
 

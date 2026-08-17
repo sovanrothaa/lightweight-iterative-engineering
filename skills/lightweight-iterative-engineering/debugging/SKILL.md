@@ -84,6 +84,8 @@ Prefer fixing the root cause over adding workarounds.
 
 Avoid unrelated refactoring unless necessary for the fix.
 
+If a fix doesn't resolve the problem, don't immediately try another fix — return to step 2 (Investigate) with what the failed attempt revealed. After 3 failed fix attempts, stop fixing: the pattern is usually that each attempt is treating a symptom of something structurally wrong, not that the next attempt will be the one that works. Question whether the underlying approach or architecture is sound before trying a fourth.
+
 ---
 
 ## 5. Verify

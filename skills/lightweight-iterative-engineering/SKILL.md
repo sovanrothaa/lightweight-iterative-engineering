@@ -349,6 +349,12 @@ Do not claim verification that was not actually performed.
 
 ---
 
+## Step 9 — Integration
+
+If the change lives on its own branch, completion isn't just "the diff is good" — the user still decides what happens to it. Confirm the base branch if it isn't obvious, then offer the real options: merge now, push and open a PR, or leave the branch as-is for later. Don't assume merge just because the work looks done, and don't discard anything unless explicitly asked to.
+
+---
+
 # Routing
 
 LIE uses skills selectively.
@@ -462,6 +468,7 @@ Work is complete when:
 5. Tests have been completed when a testing signal was detected or the user confirmed they're needed.
 6. A final whole-change review has been completed for multi-task work.
 7. No obvious unintended changes remain.
+8. If the work is on a branch, integration has been decided (see Step 9).
 
 Do not continue polishing indefinitely.
 
