@@ -111,16 +111,7 @@ Do not perform a heavy whole-change review after every individual task.
 
 ## Independent Review
 
-A second independent reviewer is optional.
-
-Use one only when:
-
-* risk is high
-* the first review identifies substantial issues
-* independent analysis materially increases confidence
-* the user requests it
-
-Do not use dual review as the default.
+A second independent reviewer is optional — same conditions as `lie-scaling`'s Review section (high risk, the first review found substantial issues, or the user asks). Do not use dual review as the default.
 
 ---
 

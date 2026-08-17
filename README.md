@@ -10,8 +10,10 @@ of that discipline that matter (mandatory review, evidence-based verification, s
 debugging, an approval checkpoint on genuinely ambiguous work) and cuts the parts that don't
 scale with task size.
 
-> v0.4 — routes by complexity level (0-3) instead of a flat single-task loop, auto-activates at
-> session start instead of requiring explicit selection, and covers the full lifecycle
+> v0.5 — each `lie-*` capability skill is now individually discoverable (visible in skill
+> listings) while still only firing through `lightweight-iterative-engineering`'s routing. v0.4
+> introduced complexity-level routing (0-3) instead of a flat single-task loop, auto-activation
+> at session start instead of requiring explicit selection, and full-lifecycle coverage
 > (planning, brainstorming, testing, debugging, review, security, scaling, release checks).
 
 ---

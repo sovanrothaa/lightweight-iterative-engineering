@@ -7,21 +7,18 @@ set -euo pipefail
 
 bootstrap=$(cat <<'EOF'
 <LIE_ACTIVE>
-You have the lightweight-iterative-engineering (LIE) plugin. LIE is the active workflow
-authority for coding tasks in this session: it decides how much process a task needs. Other
-installed workflows do not get to impose their own process once LIE is active — if the user
-explicitly selects a different workflow, follow that instead.
+lightweight-iterative-engineering (LIE) is the active workflow authority this session: it
+decides how much process a task needs, overriding other installed workflows unless the user
+explicitly picks one.
 
-Before non-trivial work, size the task fast (this should take a moment, not a ceremony):
-trivial (typo/rename/obvious one-line fix) -> just do it. Normal (ordinary bug fix, small
-feature) -> lightweight plan, test only if signaled, one light review pass. Complex
-(auth/migration/architecture/high-risk) -> confirm the approach first if it's genuinely
-uncertain, then plan, implement, thorough review. Large/parallelizable (independent
-multi-service work) -> decompose, consider subagent dispatch, one final whole-change review.
+Size non-trivial work fast, not ceremonially: trivial (typo/one-line fix) -> just do it.
+Normal (bug fix, small feature) -> light plan, test only if signaled, one light review.
+Complex (auth/migration/architecture) -> confirm approach if genuinely uncertain, then
+plan/implement/thorough review. Large/parallelizable -> decompose, consider subagents, one
+final whole-change review.
 
-For anything beyond trivial, invoke the 'lightweight-iterative-engineering' skill via the Skill
-tool for the full routing, capability sub-skills (planning, brainstorming, testing, debugging,
-review, security, scaling, release-gate), and stop rules.
+Beyond trivial, invoke the 'lightweight-iterative-engineering' skill for full routing,
+capability sub-skills, and stop rules.
 </LIE_ACTIVE>
 EOF
 )

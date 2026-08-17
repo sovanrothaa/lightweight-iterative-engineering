@@ -72,9 +72,11 @@ When a review finds issues: fix them, re-run relevant verification, and re-check
 
 No ledger. No workspace directory. No "rulings" writeups by default.
 
-A normal todo list — one line per task, done or not-done — is enough for a single session.
+Every dispatched subagent still returns one short, fixed-shape block instead of free prose — the report contract: **status** (done / blocked / needs-context), what it touched (files or commits), a one-line test/verification result, and any concern worth flagging. This is what lets the dispatcher decide fix-or-move-on without re-reading the subagent's full transcript. If the content is too large to paste back safely (a full diff, a long log), the block just points at the file instead of inlining it.
 
-If, and only if, the work genuinely spans multiple sessions and would otherwise lose track of what's done, keep a short status note: one line per completed task, not a structured ledger entry.
+A normal todo list — one line per task, done or not-done — is enough to track this for a single session.
+
+If, and only if, the work genuinely spans multiple sessions and would otherwise lose track of what's done, use the `lightweight-iterative-engineering` skill's `.lie/state.md` — record each completed task's report-contract summary under Changed Files / Remaining Work. Don't invent a second status-tracking mechanism alongside it.
 
 ---
 
