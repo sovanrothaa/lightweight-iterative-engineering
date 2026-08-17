@@ -8,7 +8,7 @@
     {
       "name": "lightweight-iterative-engineering",
       "description": "A full-lifecycle, auto-activating lightweight software engineering workflow for AI coding tasks — complexity-based routing (Level 0-3), proportional process, no default ceremony.",
-      "version": "0.5.1",
+      "version": "0.5.2",
       "source": "./",
       "author": {
         "name": "So Sovanrotha"
