@@ -5,9 +5,12 @@ description: >
   tasks: workflow authority, complexity-based routing (Level 0-3), and
   capability sub-skills for planning, brainstorming, testing, debugging,
   review, security, scaling to subagents, and release checks. Auto-activates
-  at session start via hook. Use when the user wants lightweight or pragmatic
-  engineering, minimal ceremony, conditional testing, no default TDD,
-  lightweight review, or a proportional alternative to ceremony-heavy
+  at session start via hook as the default engineering workflow authority —
+  use it for any non-trivial coding task (bug fix, feature, refactor,
+  migration, review) even without the hook present, such as inside a
+  spawned subagent. Also confirms fit when the user asks for lightweight or
+  pragmatic engineering, minimal ceremony, conditional testing, no default
+  TDD, lightweight review, or a proportional alternative to ceremony-heavy
   development workflows. Routes selectively based on task complexity and
   risk, not by applying every step to every task.
 ---
