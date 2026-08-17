@@ -6,8 +6,10 @@ description: >
   speculative work. Use when the user wants lightweight or pragmatic
   engineering, minimal ceremony, conditional testing, no default TDD,
   lightweight review, fast feedback, or a proportional alternative to
-  ceremony-heavy development workflows. Routes selectively to testing,
-  review, and debugging based on concrete signals and task risk.
+  ceremony-heavy development workflows, including cheap subagent dispatch on
+  multi-task work instead of dual review and fix-loop ceremony. Routes
+  selectively to testing, review, debugging, and scaling based on concrete
+  signals and task risk.
 ---
 
 # Lightweight Iterative Engineering
@@ -127,7 +129,7 @@ Do not prematurely optimize, refactor, abstract, document, test, or review work 
 
 Testing is **not automatically required for every task**.
 
-Only invoke the testing sub-skill when a testing requirement is actually detected — see `skills/testing` for the detection procedure. Detection is signal-based, not assumption-based, and is ordered cheapest-first so resolving it never costs more than the task justifies.
+Only invoke the testing sub-skill when a testing requirement is actually detected — see `testing/SKILL.md` for the detection procedure. Detection is signal-based, not assumption-based, and is ordered cheapest-first so resolving it never costs more than the task justifies.
 
 Do not write large numbers of tests simply because code was implemented.
 
@@ -229,7 +231,7 @@ Determine:
 * Is the behavior already clearly defined?
 * Are there important unknowns?
 
-Load `skills/debugging` when the task is primarily about diagnosing or fixing a bug.
+Load `debugging/SKILL.md` when the task is primarily about diagnosing or fixing a bug.
 
 ---
 
@@ -242,6 +244,8 @@ The plan should be proportional to the task.
 Do not create extensive planning documents for simple work.
 
 For larger work, break the request into manageable tasks.
+
+If those tasks will be dispatched to subagents (rather than worked inline in this session), load `scaling/SKILL.md` before dispatching — it covers when dispatch is actually worth it, model selection, batching, and review, so multi-task work doesn't default into ceremony-heavy patterns.
 
 If, during implementation, the scope turns out to be materially larger than the original plan assumed, pause and confirm with the user before continuing rather than silently expanding scope.
 
@@ -287,9 +291,9 @@ If the user provides feedback, treat it as authoritative clarification of the in
 
 ## Step 5 — Testing Decision
 
-Before writing tests, run the cheap-first signal check defined in `skills/testing` ("Detecting a Testing Requirement").
+Before writing tests, run the cheap-first signal check defined in `testing/SKILL.md` ("Detecting a Testing Requirement").
 
-* **Signal found** (existing test file for the touched module, or a wired-in test command in CI/config) → invoke `skills/testing`.
+* **Signal found** (existing test file for the touched module, or a wired-in test command in CI/config) → invoke `testing/SKILL.md`.
 * **No signal found, normal risk** → skip testing, proceed without asking.
 * **No signal found, high risk** (per the risk list in Principle 5) → ask the user once, then proceed based on the answer.
 
@@ -303,7 +307,7 @@ Do not create tests merely to increase coverage.
 
 Before considering the implementation complete, invoke:
 
-`skills/review`
+`review/SKILL.md`
 
 using the appropriate review depth.
 
@@ -321,7 +325,7 @@ If the work contains multiple related tasks:
 
 After all tasks are implemented and basic checks are green:
 
-`skills/review`
+`review/SKILL.md`
 
 Perform one final review across the complete change.
 
@@ -348,6 +352,11 @@ Do not claim verification that was not actually performed.
 # Routing
 
 LIE uses skills selectively.
+
+The diagram below covers a single task's understand → build → review loop. When
+Step 2 (Plan) breaks larger work into multiple tasks that will be dispatched to
+subagents, load `scaling/SKILL.md` before dispatching — it sits upstream of this
+loop, not inside it.
 
 ```text
                     TASK
@@ -389,7 +398,7 @@ If the bug fix triggers a testing signal (or a regression test is the natural ve
 
 **Testing**
 
-Invoke only when the cheap-first signal check in `skills/testing` finds a signal, or the high-risk exception applies.
+Invoke only when the cheap-first signal check in `testing/SKILL.md` finds a signal, or the high-risk exception applies.
 
 **Review**
 
@@ -400,6 +409,10 @@ Use lightweight review by default.
 Use deeper review when risk justifies it.
 
 For multi-task work, perform one additional final whole-change review.
+
+**Scaling**
+
+Invoke when Step 2 decides multiple tasks will be dispatched to subagents rather than worked inline. Covers dispatch criteria, model selection, batching, and per-task review depth — see `scaling/SKILL.md`.
 
 Do not automatically invoke every sub-skill.
 
@@ -421,6 +434,8 @@ Avoid:
 * large context collection without purpose
 * asking a clarifying question when a cheap local check would answer it
 * exploring broadly just to avoid asking a question — that isn't actually cheaper
+* dispatching a subagent on the session's default model when a cheaper one would do
+* one subagent dispatch per task when several same-shape tasks could be batched into one
 
 Prefer:
 

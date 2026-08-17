@@ -1,0 +1,18 @@
+{
+  "name": "lightweight-iterative-engineering",
+  "description": "Marketplace for the Lightweight Iterative Engineering (LIE) skill",
+  "owner": {
+    "name": "So Sovanrotha"
+  },
+  "plugins": [
+    {
+      "name": "lightweight-iterative-engineering",
+      "description": "A pragmatic, lightweight software engineering workflow for AI coding tasks that prioritizes fast iteration, proportional process, and minimal speculative work — conditional testing, proportional review, no default ceremony.",
+      "version": "0.2.0",
+      "source": "./",
+      "author": {
+        "name": "So Sovanrotha"
+      }
+    }
+  ]
+}

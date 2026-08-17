@@ -4,7 +4,7 @@ A lightweight AI-assisted software engineering skill focused on **fast iteration
 
 LIE is a reaction to "ceremony-heavy" agent workflows that default to TDD on every task, multi-agent review pipelines for trivial changes, and clarifying questions where a five-second local check would answer the question instead. It keeps the parts of that discipline that matter (mandatory review, evidence-based verification, systematic debugging) and cuts the parts that don't scale with task size.
 
-> v0.1 — early and unpolished. Structure and rules will change as it gets used on real tasks.
+> v0.2 — early and unpolished. Structure and rules will change as it gets used on real tasks.
 
 ---
 
@@ -18,6 +18,7 @@ Concretely, that means:
 * **Review is mandatory but proportional.** Every change gets one lightweight review pass. Deeper review is reserved for genuinely risky work (auth, payments, crypto, infra, destructive operations).
 * **Ambiguity is resolved cheaply.** Prefer a fast local check or a reasonable default over stopping to ask the user — and prefer asking over open-ended exploration, since aimless exploration can cost more than the question would have.
 * **Multi-task work gets one final whole-change review**, not a heavy review repeated after every sub-task.
+* **Subagent dispatch is scoped and cheap.** Dispatch only when isolation actually pays for itself, use the cheapest model that can do the task, batch same-shape work into one dispatch, and skip ledger/report ceremony — not a dual-review, multi-round fix loop for every task.
 * **Verification means evidence**, not "the code looks right."
 
 ## What LIE Isn't
@@ -31,16 +32,20 @@ Concretely, that means:
 ## Structure
 
 ```text
-lightweight-iterative-engineering/
-├── SKILL.md                  # Core workflow, principles, routing
-└── sub-skills/
-    ├── testing/SKILL.md      # When and how to test
-    ├── review/SKILL.md       # Lightweight review, risk-based escalation
-    └── debugging/SKILL.md    # Reproduce → investigate → root cause → fix → verify
-
+lightweight-iterative-engineering/          # plugin root
+├── .claude-plugin/
+│   ├── plugin.json
+│   └── marketplace.json
+└── skills/
+    └── lightweight-iterative-engineering/  # the one discoverable skill
+        ├── SKILL.md          # Core workflow, principles, routing
+        ├── testing/SKILL.md   # When and how to test
+        ├── review/SKILL.md    # Lightweight review, risk-based escalation
+        ├── debugging/SKILL.md # Reproduce → investigate → root cause → fix → verify
+        └── scaling/SKILL.md   # Subagent dispatch, model selection, batching for multi-task work
 ```
 
-`SKILL.md` is the entry point and routes into the three sub-skills only when there's a concrete reason to — debugging when the task is a defect, testing when a signal is found, review always (but scaled to risk).
+`SKILL.md` is the entry point and routes into the four sub-skills only when there's a concrete reason to — debugging when the task is a defect, testing when a signal is found, review always (but scaled to risk), scaling when work is split across subagents.
 
 ## Who this is for
 
@@ -48,7 +53,20 @@ Anyone using an AI coding agent (Claude Code, or similar) who wants a workflow t
 
 ## Usage
 
-Drop the `lightweight-iterative-engineering/` folder into wherever your tool loads skills from (e.g. a `skills/` directory your agent is configured to read). The parent `SKILL.md` is designed to be loaded first; it references the sub-skills by path and loads them only when its routing rules call for it.
+Install as a Claude Code plugin:
+
+```json
+"extraKnownMarketplaces": {
+  "lightweight-iterative-engineering": {
+    "source": { "source": "github", "repo": "sovanrothaa/lightweight-iterative-engineering" }
+  }
+},
+"enabledPlugins": {
+  "lightweight-iterative-engineering@lightweight-iterative-engineering": true
+}
+```
+
+Add that to your `settings.json` (or your tool's equivalent). The `SKILL.md` under `skills/lightweight-iterative-engineering/` is the entry point; it references the sub-skills by relative path and loads them only when its routing rules call for it.
 
 ## Activation
 

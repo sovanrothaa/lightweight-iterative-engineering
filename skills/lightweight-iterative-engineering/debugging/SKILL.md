@@ -94,7 +94,7 @@ Verify that:
 * the expected behavior works
 * the fix does not introduce an obvious regression
 
-Run the testing sub-skill's cheap-first signal check (see `skills/testing`) to determine whether a regression test is warranted — a bug fix commonly satisfies signal 1 or 2 on its own (e.g. it touches a file that already has a test sibling). If no signal is found and the fix is not high-risk, verify via reproduction and manual check instead of writing a test.
+Run the testing sub-skill's cheap-first signal check (see `../testing/SKILL.md`) to determine whether a regression test is warranted — a bug fix commonly satisfies signal 1 or 2 on its own (e.g. it touches a file that already has a test sibling). If no signal is found and the fix is not high-risk, verify via reproduction and manual check instead of writing a test.
 
 ---
 

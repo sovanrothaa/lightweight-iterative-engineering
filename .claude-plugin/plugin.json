@@ -1,0 +1,18 @@
+{
+  "name": "lightweight-iterative-engineering",
+  "description": "A pragmatic, lightweight software engineering workflow for AI coding tasks that prioritizes fast iteration, proportional process, and minimal speculative work — conditional testing, proportional review, no default ceremony.",
+  "version": "0.2.0",
+  "author": {
+    "name": "So Sovanrotha"
+  },
+  "homepage": "https://github.com/sovanrothaa/lightweight-iterative-engineering",
+  "repository": "https://github.com/sovanrothaa/lightweight-iterative-engineering",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "lightweight",
+    "pragmatic",
+    "proportional-process",
+    "workflow"
+  ]
+}
