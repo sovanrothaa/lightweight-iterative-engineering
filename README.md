@@ -10,7 +10,10 @@ of that discipline that matter (mandatory review, evidence-based verification, s
 debugging, an approval checkpoint on genuinely ambiguous work) and cuts the parts that don't
 scale with task size.
 
-> v0.5 — each `lie-*` capability skill is now individually discoverable (visible in skill
+> v0.6 — added a `PreToolUse` guard that mechanically denies a `Skill` call into a competing
+> skill when LIE already has a documented equivalent (e.g. a generic brainstorming or TDD skill),
+> pointing the caller at the right `lie-*` skill instead — enforcement, not just a description-level
+> claim. v0.5 made each `lie-*` capability skill individually discoverable (visible in skill
 > listings) while still only firing through `lightweight-iterative-engineering`'s routing. v0.4
 > introduced complexity-level routing (0-3) instead of a flat single-task loop, auto-activation
 > at session start instead of requiring explicit selection, and full-lifecycle coverage
@@ -35,7 +38,9 @@ The goal is not to follow every engineering best practice on every task. The goa
 
 * **LIE is the workflow authority.** Once active, it decides whether planning, brainstorming,
   testing, deeper review, or a subagent dispatch is warranted — other installed skills don't get
-  to impose their own process on top.
+  to impose their own process on top. This isn't just a description-level claim: a `PreToolUse`
+  hook mechanically blocks invoking a competing skill LIE already has a routed equivalent for,
+  rather than relying on prompt wording alone to win that argument.
 * **Routed by complexity, not by a flat checklist.** Level 0 (trivial) gets no ceremony. Level 1
   (normal) gets a lightweight plan and one review pass. Level 2 (complex/risky) gets an approach
   confirmation and thorough review. Level 3 (large/parallelizable) gets decomposition and one
@@ -67,8 +72,11 @@ lightweight-iterative-engineering/
 │   ├── plugin.json
 │   └── marketplace.json
 ├── hooks/
-│   ├── hooks.json        # SessionStart -> auto-activation bootstrap
+│   ├── hooks.json        # SessionStart -> auto-activation bootstrap;
+│   │                     # PreToolUse -> competing-skill guard
 │   ├── session-start
+│   ├── pretooluse-skill-guard   # denies a Skill call into a competitor
+│   │                             # LIE already has an equivalent for
 │   └── run-hook.cmd      # Windows/POSIX polyglot wrapper
 └── skills/
     ├── lightweight-iterative-engineering/SKILL.md   # entry point: workflow authority,
@@ -112,6 +120,14 @@ required. If the user explicitly selects a different workflow, LIE steps aside f
 
 Contextual phrases like "skip TDD," "keep the review lightweight," or "avoid unnecessary
 ceremony" reinforce that LIE is the right fit; they aren't required to activate it.
+
+A `PreToolUse` hook backs this with an actual enforcement layer, not just prompt wording: it
+denies a `Skill` call into a competing skill (a generic brainstorming, TDD, debugging, review,
+subagent-dispatch, or verification-before-completion skill from another installed plugin) only
+when LIE already has a documented, routed equivalent for it, and tells the caller which `lie-*`
+skill to use instead. This is a targeted redirect, not a blanket block — a skill LIE has no
+substitute for (e.g. a git-worktree helper) is left alone, so "the user can explicitly choose
+something else" still holds everywhere LIE doesn't directly compete.
 
 ## License
 

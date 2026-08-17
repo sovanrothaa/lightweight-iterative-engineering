@@ -12,6 +12,19 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/run-hook.cmd\" pretooluse-skill-guard",
+            "shell": "bash",
+            "async": false
+          }
+        ]
+      }
     ]
   }
 }

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# PreToolUse hook (matcher: Skill) for lightweight-iterative-engineering (LIE).
+#
+# Denies a Skill call into a competing skill ONLY when LIE already has a
+# documented, routed equivalent (the same list covered by the precedence
+# clauses in each lie-*/SKILL.md description). Skills LIE has no substitute
+# for (using-git-worktrees, writing-skills, finishing-a-development-branch,
+# etc.) are left alone -- this is a targeted redirect, not a blanket block,
+# so LIE's "the user can explicitly choose something else" promise still
+# holds everywhere it doesn't directly compete.
+#
+# Matches on the raw stdin text rather than a specific tool_input field name
+# -- the exact key the Skill tool uses isn't documented, but the invoked
+# skill's identifier (e.g. "superpowers:brainstorming") will appear as a
+# substring in the JSON regardless of which key holds it.
+
+set -uo pipefail
+
+input="$(cat)"
+
+lie_equivalent=""
+competitor=""
+
+find_match() {
+  local needle="$1" target="$2"
+  if printf '%s' "$input" | grep -qF -- "$needle"; then
+    competitor="$needle"
+    lie_equivalent="$target"
+    return 0
+  fi
+  return 1
+}
+
+find_match "superpowers:brainstorming" "lie-brainstorming" ||
+find_match "superpowers:writing-plans" "lie-planning" ||
+find_match "superpowers:test-driven-development" "lie-testing" ||
+find_match "superpowers:systematic-debugging" "lie-debugging" ||
+find_match "superpowers:requesting-code-review" "lie-review" ||
+find_match "superpowers:receiving-code-review" "lie-review" ||
+find_match "superpowers:dispatching-parallel-agents" "lie-scaling" ||
+find_match "superpowers:subagent-driven-development" "lie-scaling" ||
+find_match "superpowers:verification-before-completion" "lie-release-gate"
+
+if [ -z "$lie_equivalent" ]; then
+  exit 0
+fi
+
+reason="lightweight-iterative-engineering (LIE) is this session's workflow authority and already covers this: invoke 'lightweight-iterative-engineering' (it routes to '$lie_equivalent' when warranted) instead of '$competitor'. If '$competitor' is genuinely needed for something LIE doesn't cover, say so to your human partner -- they can allow it directly."
+
+reason_escaped=$(printf '%s' "$reason" | sed 's/\\/\\\\/g; s/"/\\"/g')
+
+printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "PreToolUse",\n    "permissionDecision": "deny",\n    "permissionDecisionReason": "%s"\n  }\n}\n' "$reason_escaped"
+
+exit 0
