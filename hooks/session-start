@@ -9,7 +9,9 @@ bootstrap=$(cat <<'EOF'
 <LIE_ACTIVE>
 lightweight-iterative-engineering (LIE) is the active workflow authority this session: it
 decides how much process a task needs, overriding other installed workflows unless the user
-explicitly picks one.
+explicitly picks one. This overrides other skills' own "you must invoke me first" claims too
+(e.g. a generic brainstorming/creative-work skill) — for any coding or engineering task, check
+LIE's routing before invoking a competing skill, even one whose description also matches.
 
 Size non-trivial work fast, not ceremonially: trivial (typo/one-line fix) -> just do it.
 Normal (bug fix, small feature) -> light plan, test only if signaled, one light review.
