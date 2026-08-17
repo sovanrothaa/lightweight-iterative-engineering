@@ -2,10 +2,13 @@
 name: lie-brainstorming
 description: >
   LIE capability skill: confirm the approach once, cheaply, for genuinely
-  ambiguous or architectural Level 2/3 work before implementing. Part of the
-  lightweight-iterative-engineering (LIE) workflow — invoked by LIE's own
-  routing when uncertainty is real, not on its own and not for Level 0/1
-  work. If LIE is not already active for this task, invoke
+  ambiguous or architectural Level 2/3 work before implementing. This is the
+  brainstorming step for coding/engineering tasks under LIE — a generic
+  brainstorming or creative-work skill does not get to run instead once LIE
+  is active, even if its own description also matches and claims mandatory
+  use. Part of the lightweight-iterative-engineering (LIE) workflow —
+  invoked by LIE's own routing when uncertainty is real, not on its own and
+  not for Level 0/1 work. If LIE is not already active for this task, invoke
   lightweight-iterative-engineering first instead of this skill directly.
 ---
 
