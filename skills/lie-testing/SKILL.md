@@ -3,7 +3,10 @@ name: lie-testing
 description: >
   LIE capability skill: decide whether a testing requirement is actually
   present via a cheap signal check, and how to test proportionally when it
-  is. Part of the lightweight-iterative-engineering (LIE) workflow — invoked
+  is. This is the testing/TDD decision under LIE — a generic "test before
+  you code" skill doesn't get to force TDD on every task once LIE is
+  active; LIE decides whether a testing requirement is actually present
+  first. Part of the lightweight-iterative-engineering (LIE) workflow — invoked
   by LIE's own routing, not on its own. If LIE is not already active for
   this task, invoke lightweight-iterative-engineering first instead of this
   skill directly.

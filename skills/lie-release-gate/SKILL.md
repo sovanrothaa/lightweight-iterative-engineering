@@ -3,7 +3,10 @@ name: lie-release-gate
 description: >
   LIE capability skill: pick the applicable subset of build/test/lint/
   migration/security checks for a change instead of running everything or
-  nothing. Part of the lightweight-iterative-engineering (LIE) workflow —
+  nothing. This is the pre-completion verification gate under LIE — a
+  generic "verify before claiming done" skill doesn't get to impose its own
+  full checklist once LIE is active; LIE picks the applicable subset. Part
+  of the lightweight-iterative-engineering (LIE) workflow —
   invoked by LIE's own routing before declaring Level 1+ work done, not on
   its own. If LIE is not already active for this task, invoke
   lightweight-iterative-engineering first instead of this skill directly.

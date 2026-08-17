@@ -2,7 +2,10 @@
 name: lie-planning
 description: >
   LIE capability skill: write the smallest plan that reduces implementation
-  risk, sized to task complexity (Level 0-3). Part of the
+  risk, sized to task complexity (Level 0-3). This is the planning step
+  under LIE — a generic multi-step-task planning skill doesn't get to run
+  instead once LIE is active, even if its own description also matches.
+  Part of the
   lightweight-iterative-engineering (LIE) workflow — invoked by LIE's own
   routing, not on its own. If LIE is not already active for this task, invoke
   lightweight-iterative-engineering first instead of this skill directly.

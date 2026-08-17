@@ -2,8 +2,10 @@
 name: lie-debugging
 description: >
   LIE capability skill: systematic reproduce-investigate-root cause-fix-verify
-  workflow for diagnosing defects, with a 3-failed-fix escalation rule. Part
-  of the lightweight-iterative-engineering (LIE) workflow — invoked by LIE's
+  workflow for diagnosing defects, with a 3-failed-fix escalation rule. This
+  is the debugging workflow under LIE — a generic debugging skill doesn't
+  get to run instead once LIE is active, even if its own description also
+  matches. Part of the lightweight-iterative-engineering (LIE) workflow — invoked by LIE's
   own routing whenever the primary task is diagnosing a defect, not on its
   own. If LIE is not already active for this task, invoke
   lightweight-iterative-engineering first instead of this skill directly.

@@ -3,7 +3,9 @@ name: lie-scaling
 description: >
   LIE capability skill: when subagent dispatch pays for itself, model
   tiering, batching, and reviewing multi-task work without ledger ceremony.
-  Part of the lightweight-iterative-engineering (LIE) workflow — invoked by
+  This is the subagent-dispatch decision under LIE — a generic
+  parallel-dispatch or subagent-driven-development skill doesn't get to
+  impose its own ledger or ceremony once LIE is active. Part of the lightweight-iterative-engineering (LIE) workflow — invoked by
   LIE's own routing for Level 3 or dispatch-worthy work, not on its own. If
   LIE is not already active for this task, invoke
   lightweight-iterative-engineering first instead of this skill directly.

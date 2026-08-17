@@ -2,7 +2,9 @@
 name: lie-review
 description: >
   LIE capability skill: one focused review pass, escalated by risk, with a
-  final whole-change review for multi-task work. Part of the
+  final whole-change review for multi-task work. This is the review step
+  under LIE — a generic code-review skill doesn't get to impose its own
+  review ceremony once LIE is active. Part of the
   lightweight-iterative-engineering (LIE) workflow — invoked by LIE's own
   routing before declaring work done, not on its own. If LIE is not already
   active for this task, invoke lightweight-iterative-engineering first
