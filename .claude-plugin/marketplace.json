@@ -7,8 +7,8 @@
   "plugins": [
     {
       "name": "lightweight-iterative-engineering",
-      "description": "A pragmatic, lightweight software engineering workflow for AI coding tasks that prioritizes fast iteration, proportional process, and minimal speculative work — conditional testing, proportional review, no default ceremony.",
-      "version": "0.3.0",
+      "description": "A full-lifecycle, auto-activating lightweight software engineering workflow for AI coding tasks — complexity-based routing (Level 0-3), proportional process, no default ceremony.",
+      "version": "0.4.0",
       "source": "./",
       "author": {
         "name": "So Sovanrotha"

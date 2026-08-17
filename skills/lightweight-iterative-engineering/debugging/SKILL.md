@@ -60,6 +60,8 @@ Follow evidence toward the cause.
 
 Avoid broad speculative changes.
 
+If a working, analogous example exists elsewhere in the codebase (same kind of operation succeeding on a different input, or the same pattern implemented correctly in a sibling module), compare against it before theorizing from scratch — differences between the working and broken cases are often the fastest route to the cause.
+
 ---
 
 ## 3. Identify Root Cause
@@ -71,6 +73,8 @@ Distinguish:
 * symptom
 * immediate cause
 * underlying cause
+
+State the hypothesis explicitly ("X is the cause because Y") before acting on it — this is what step 4 tests, and vague hypotheses produce vague fixes.
 
 Do not stop at making the visible error disappear if the underlying defect remains.
 

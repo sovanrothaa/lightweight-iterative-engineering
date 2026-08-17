@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# SessionStart hook for lightweight-iterative-engineering (LIE)
+# Injects a short activation bootstrap so LIE is the default workflow
+# authority without requiring the user to explicitly select it every time.
+
+set -euo pipefail
+
+bootstrap=$(cat <<'EOF'
+<LIE_ACTIVE>
+You have the lightweight-iterative-engineering (LIE) plugin. LIE is the active workflow
+authority for coding tasks in this session: it decides how much process a task needs. Other
+installed workflows do not get to impose their own process once LIE is active — if the user
+explicitly selects a different workflow, follow that instead.
+
+Before non-trivial work, size the task fast (this should take a moment, not a ceremony):
+trivial (typo/rename/obvious one-line fix) -> just do it. Normal (ordinary bug fix, small
+feature) -> lightweight plan, test only if signaled, one light review pass. Complex
+(auth/migration/architecture/high-risk) -> confirm the approach first if it's genuinely
+uncertain, then plan, implement, thorough review. Large/parallelizable (independent
+multi-service work) -> decompose, consider subagent dispatch, one final whole-change review.
+
+For anything beyond trivial, invoke the 'lightweight-iterative-engineering' skill via the Skill
+tool for the full routing, capability sub-skills (planning, brainstorming, testing, debugging,
+review, security, scaling, release-gate), and stop rules.
+</LIE_ACTIVE>
+EOF
+)
+
+escape_for_json() {
+    local s="$1"
+    s="${s//\\/\\\\}"
+    s="${s//\"/\\\"}"
+    s="${s//$'\n'/\\n}"
+    s="${s//$'\r'/\\r}"
+    s="${s//$'\t'/\\t}"
+    printf '%s' "$s"
+}
+
+bootstrap_escaped=$(escape_for_json "$bootstrap")
+
+# Claude Code reads hookSpecificOutput.additionalContext; other harnesses use
+# additional_context or a top-level additionalContext. Emit only the field
+# the current platform consumes so nothing gets duplicated.
+if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
+  printf '{\n  "additional_context": "%s"\n}\n' "$bootstrap_escaped"
+elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$bootstrap_escaped"
+else
+  printf '{\n  "additionalContext": "%s"\n}\n' "$bootstrap_escaped"
+fi
+
+exit 0

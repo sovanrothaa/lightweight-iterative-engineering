@@ -1,55 +1,88 @@
-# Lightweight Iterative Engineering (LIE) (work-in-progress)
+# Lightweight Iterative Engineering (LIE)
 
-A lightweight AI-assisted software engineering skill focused on **fast iteration, proportional process, and minimal waste** — of both time and tokens.
+A lightweight, **auto-activating**, full-lifecycle AI-assisted software engineering workflow —
+focused on **proportional process** and minimal waste of both time and tokens.
 
-LIE is a reaction to "ceremony-heavy" agent workflows that default to TDD on every task, multi-agent review pipelines for trivial changes, and clarifying questions where a five-second local check would answer the question instead. It keeps the parts of that discipline that matter (mandatory review, evidence-based verification, systematic debugging) and cuts the parts that don't scale with task size.
+LIE is a reaction to "ceremony-heavy" agent workflows that default to TDD on every task,
+multi-agent review pipelines for trivial changes, hard approval gates on one-line fixes, and
+clarifying questions where a five-second local check would answer instead. It keeps the parts
+of that discipline that matter (mandatory review, evidence-based verification, systematic
+debugging, an approval checkpoint on genuinely ambiguous work) and cuts the parts that don't
+scale with task size.
 
-> v0.3 — early and unpolished. Structure and rules will change as it gets used on real tasks.
+> v0.4 — routes by complexity level (0-3) instead of a flat single-task loop, auto-activates at
+> session start instead of requiring explicit selection, and covers the full lifecycle
+> (planning, brainstorming, testing, debugging, review, security, scaling, release checks).
 
 ---
 
+## Origin
+
+LIE's capability sub-skills are derived from [`obra/superpowers`](https://github.com/obra/superpowers)
+(MIT licensed) — a widely used, battle-tested skills framework — with the ceremony trimmed for
+proportional use. The mechanics that are genuinely proven (systematic debugging's phases,
+parallel-dispatch rules, evidence-before-claims, the diff-scoped reviewer pattern) are kept; the
+parts that make superpowers expensive by default for ordinary work (hard approval gates on every
+task, per-task dual-agent review loops, mandatory spec-file ceremony) are not. See each
+sub-skill's `SKILL.md` for what was kept and what was cut.
+
 ## Philosophy
 
-The goal is not to follow every engineering best practice on every task. The goal is to use the **minimum process necessary to produce correct, maintainable software.**
+The goal is not to follow every engineering best practice on every task. The goal is to use the
+**minimum sufficient process** — not the minimum possible process — for the task at hand.
 
-Concretely, that means:
-
-* **Testing is opt-in, not default.** Tests get written when explicitly requested or when a cheap, concrete signal (an existing sibling test file, a wired-in CI test command) says the project expects them — not because code was written.
-* **Review is mandatory but proportional.** Every change gets one lightweight review pass. Deeper review is reserved for genuinely risky work (auth, payments, crypto, infra, destructive operations).
-* **Ambiguity is resolved cheaply.** Prefer a fast local check or a reasonable default over stopping to ask the user — and prefer asking over open-ended exploration, since aimless exploration can cost more than the question would have.
-* **Multi-task work gets one final whole-change review**, not a heavy review repeated after every sub-task.
-* **Subagent dispatch is scoped and cheap.** Dispatch only when isolation actually pays for itself, use the cheapest model that can do the task, batch same-shape work into one dispatch, and skip ledger/report ceremony — not a dual-review, multi-round fix loop for every task.
+* **LIE is the workflow authority.** Once active, it decides whether planning, brainstorming,
+  testing, deeper review, or a subagent dispatch is warranted — other installed skills don't get
+  to impose their own process on top.
+* **Routed by complexity, not by a flat checklist.** Level 0 (trivial) gets no ceremony. Level 1
+  (normal) gets a lightweight plan and one review pass. Level 2 (complex/risky) gets an approach
+  confirmation and thorough review. Level 3 (large/parallelizable) gets decomposition and one
+  final whole-change review.
+* **Testing is opt-in, not default.** Tests get written when explicitly requested or when a
+  concrete signal (an existing sibling test file, a wired-in CI test command) says the project
+  expects them.
+* **A confirm-before-implementing checkpoint exists — but only for Level 2/3.** Superpowers'
+  hard approval gate applies to every task including one-line fixes, which is a documented real
+  complaint about it. LIE's version only fires when the approach is genuinely uncertain.
+* **Ambiguity is resolved cheaply.** Prefer a fast local check or a reasonable default over
+  stopping to ask — and prefer asking over open-ended exploration.
+* **Subagent dispatch is scoped and cheap**, including tiering the reviewer's model to what the
+  review actually requires — not defaulting every dispatch to the most expensive model available.
 * **Verification means evidence**, not "the code looks right."
 
 ## What LIE Isn't
 
-* **Not anti-testing** — LIE tests when there is a concrete signal (such as existing test files or CI test commands) or when testing is explicitly requested. It simply does not default to TDD on every task.
-* **Not anti-review** — Review is mandatory. It is simply proportional: lightweight by default, deeper when risk justifies it.
-* **Not for every project** — Some teams and codebases require strict TDD or heavyweight engineering processes. LIE is a choice, not a prescription.
-* **Not a silver bullet** — LIE is a workflow, not a substitute for good engineering judgment.
-
+* **Not anti-testing** — tests when there's a concrete signal or an explicit request, not TDD by default.
+* **Not anti-review** — review is mandatory, just proportional to risk.
+* **Not anti-process for ambiguous work** — Level 2/3 still gets an approach check and thorough review.
+* **Not for every project** — some teams genuinely need strict TDD or heavier process. LIE is a choice.
 
 ## Structure
 
 ```text
-lightweight-iterative-engineering/          # plugin root
+lightweight-iterative-engineering/
 ├── .claude-plugin/
 │   ├── plugin.json
 │   └── marketplace.json
+├── hooks/
+│   ├── hooks.json        # SessionStart -> auto-activation bootstrap
+│   ├── session-start
+│   └── run-hook.cmd      # Windows/POSIX polyglot wrapper
 └── skills/
-    └── lightweight-iterative-engineering/  # the one discoverable skill
-        ├── SKILL.md          # Core workflow, principles, routing
-        ├── testing/SKILL.md   # When and how to test
-        ├── review/SKILL.md    # Lightweight review, risk-based escalation
-        ├── debugging/SKILL.md # Reproduce → investigate → root cause → fix → verify
-        └── scaling/SKILL.md   # Subagent dispatch, model selection, batching for multi-task work
+    └── lightweight-iterative-engineering/   # the one discoverable skill (entry point)
+        ├── SKILL.md          # workflow authority, complexity levels, routing, stop rules
+        ├── planning/SKILL.md
+        ├── brainstorming/SKILL.md   # Level 2/3 only: confirm the approach once, cheaply
+        ├── testing/SKILL.md
+        ├── debugging/SKILL.md
+        ├── review/SKILL.md
+        ├── security/SKILL.md
+        ├── scaling/SKILL.md         # subagent dispatch, model tiering, batching
+        └── release-gate/SKILL.md    # adaptive per-change verification checklist
 ```
 
-`SKILL.md` is the entry point and routes into the four sub-skills only when there's a concrete reason to — debugging when the task is a defect, testing when a signal is found, review always (but scaled to risk), scaling when work is split across subagents.
-
-## Who this is for
-
-Anyone using an AI coding agent (Claude Code, or similar) who wants a workflow that defaults to "do the smallest correct thing and verify it," rather than one that defaults to generating tests, reports, and review documents for every change regardless of size.
+`SKILL.md` is the entry point and routes into sub-skills only when the complexity level and
+task shape call for it — nothing fires automatically just because it exists.
 
 ## Usage
 
@@ -66,26 +99,13 @@ Install as a Claude Code plugin:
 }
 ```
 
-Add that to your `settings.json` (or your tool's equivalent). The `SKILL.md` under `skills/lightweight-iterative-engineering/` is the entry point; it references the sub-skills by relative path and loads them only when its routing rules call for it.
-
 ## Activation
 
-LIE is activated when the user explicitly selects the workflow, for example:
+LIE auto-activates at session start via its `SessionStart` hook — no explicit selection
+required. If the user explicitly selects a different workflow, LIE steps aside for that task.
 
-- "Use LIE for this task."
-- "LIE mode."
-- "Use Lightweight Iterative Engineering."
-- "Use the lightweight engineering workflow."
-
-Contextual requests such as "skip TDD", "keep the review lightweight", or
-"avoid unnecessary ceremony" may also indicate LIE when the surrounding
-request clearly calls for a lightweight engineering workflow.
-
-When LIE is active, it controls the development workflow for the current task.
-Other installed skills may still be used as supporting capabilities, but their
-conflicting workflow rules should not be applied automatically.
-
-LIE does not assume it is active when the user has not selected it.
+Contextual phrases like "skip TDD," "keep the review lightweight," or "avoid unnecessary
+ceremony" reinforce that LIE is the right fit; they aren't required to activate it.
 
 ## License
 

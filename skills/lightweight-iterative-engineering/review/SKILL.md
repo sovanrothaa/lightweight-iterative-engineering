@@ -38,6 +38,8 @@ Do not automatically create:
 
 When the reviewer is a subagent, hand it the diff (as a file, or a precise commit range) and what the change should do — not the dispatcher's own session history. A reviewer evaluates the work product; re-deriving how you got there wastes its context and yours.
 
+Tier the model to what the review actually requires — see `../scaling/SKILL.md`'s Model Selection. A reviewer given open-ended scope and the session's most capable model by default is how a review pass balloons into the most expensive step for no added confidence.
+
 ---
 
 ## Risk-Based Escalation

@@ -1,479 +1,211 @@
 ---
 name: lightweight-iterative-engineering
 description: >
-  A pragmatic, lightweight software engineering workflow for AI coding tasks
-  that prioritizes fast iteration, proportional process, and minimal
-  speculative work. Use when the user wants lightweight or pragmatic
+  A full-lifecycle, proportional software engineering workflow for AI coding
+  tasks: workflow authority, complexity-based routing (Level 0-3), and
+  capability sub-skills for planning, brainstorming, testing, debugging,
+  review, security, scaling to subagents, and release checks. Auto-activates
+  at session start via hook. Use when the user wants lightweight or pragmatic
   engineering, minimal ceremony, conditional testing, no default TDD,
-  lightweight review, fast feedback, or a proportional alternative to
-  ceremony-heavy development workflows, including cheap subagent dispatch on
-  multi-task work instead of dual review and fix-loop ceremony. Routes
-  selectively to testing, review, debugging, and scaling based on concrete
-  signals and task risk.
+  lightweight review, or a proportional alternative to ceremony-heavy
+  development workflows. Routes selectively based on task complexity and
+  risk, not by applying every step to every task.
 ---
 
 # Lightweight Iterative Engineering
 
 ## Purpose
 
-Lightweight Iterative Engineering (LIE) is a lightweight AI-assisted software development workflow focused on:
+LIE is the minimum sufficient engineering process for a given task — not the minimum possible
+process, and not the maximum available one. Too little process produces defects; too much
+wastes time and tokens for no added confidence. LIE finds the point where more process stops
+paying for itself.
 
-* fast iteration
-* useful feedback
-* minimal speculative work
-* proportional verification
-* efficient use of time and context
+---
 
-LIE favors practical engineering over rigid process.
+## Workflow Authority
 
-The goal is not to follow every engineering practice on every task.
+When LIE is active, it decides the process for a task — whether planning, brainstorming,
+testing, deeper review, or a subagent dispatch is warranted, and when the task is done. Other
+installed skills or workflows may offer specialized techniques, but do not get to impose their
+own process on top of LIE's once it's active — that's how ceremony compounds when skills stack.
+LIE's own sub-skills (`planning/`, `brainstorming/`, `testing/`, `debugging/`, `review/`,
+`security/`, `scaling/`, `release-gate/`) are capabilities LIE routes to deliberately, not
+independent triggers.
 
-The goal is to use the **minimum process necessary to produce correct, maintainable software**.
+> **Never perform a process step because the framework can. Perform it because the task
+> benefits from it.**
 
 ---
 
 ## Activation
 
-Use this workflow when the user explicitly asks to use LIE, Lightweight
-Iterative Engineering, lightweight engineering, or LIE mode.
+LIE auto-activates at session start (see the plugin's `SessionStart` hook) as the default
+workflow authority for coding tasks. If the user explicitly selects a different workflow,
+follow that instead — LIE does not fight for control once someone has chosen something else.
 
-### Explicit LIE Signals
-
-- "use LIE"
-- "LIE mode"
-- "use Lightweight Iterative Engineering"
-- "lightweight engineering"
-- "lightweight iterative engineering"
-- "use lightweight"
-- "LIE workflow"
-- "pragmatic workflow"
-
-### Contextual LIE Signals
-
-The following may indicate LIE when the surrounding request clearly indicates
-a lightweight engineering workflow:
-
-- "skip TDD"
-- "minimal process"
-- "conditional testing"
-- "don't over-engineer"
-- "keep the review lightweight"
-- "avoid unnecessary ceremony"
-
-Contextual signals should not activate LIE in isolation when the user's intent
-is ambiguous. Prefer the surrounding request and the user's explicit workflow
-choice.
-
-When LIE is explicitly selected, use LIE as the primary development workflow
-for the current task.
-
-If another general-purpose development workflow is also installed, including
-Superpowers, do not automatically apply its conflicting workflow rules.
-
-Other skills may still be used as supporting capabilities when useful, but LIE
-controls the development process.
-
-In particular, when LIE is active, do not automatically inherit:
-
-- mandatory TDD
-- mandatory test-first development
-- dual-agent review
-- repeated reviewer/implementer cycles
-- review report artifacts
-- mandatory planning or brainstorming ceremonies
-
-unless the user explicitly requests them or LIE's routing determines they are
-appropriate.
-
-If the user explicitly selects another workflow instead, follow that workflow
-rather than LIE.
-
-If no workflow is explicitly selected, do not assume that LIE is active.
+Contextual signals that reinforce LIE is the right fit: "skip TDD," "minimal process,"
+"don't over-engineer," "keep the review lightweight," "avoid unnecessary ceremony" — these
+confirm, they aren't required to activate it.
 
 ---
 
-# Core Principles
+## Complexity Classification
 
-## 1. Understand Before Acting
+Before routing, size the task on four dimensions — this should be a fast judgment call, not a
+ceremony of its own:
 
-Before making changes:
+* **Scope** — how large is the actual change?
+* **Risk** — how costly is an incorrect implementation?
+* **Uncertainty** — how well understood is the problem and the desired solution?
+* **Coordination** — how many systems, interfaces, or independent workstreams are involved?
 
-* Understand what the user wants.
-* Inspect the relevant code and existing patterns.
-* Identify important constraints.
-* Determine whether the task is well-defined or exploratory.
+Do not classify primarily by file count — it's evidence, not the answer. A 40-file mechanical
+rename can be Level 0/1; a one-line authorization change can be Level 2; three independent
+service implementations can be Level 3.
 
-Do not explore unrelated parts of the repository.
+**Level 0 — Trivial.** Typo, rename, obvious config change, mechanical fix with negligible
+risk. No plan, no test, no review ceremony beyond a self-check.
 
-Do not ask unnecessary clarification questions when a reasonable interpretation is obvious.
+**Level 1 — Normal.** Ordinary bug fix, small endpoint, isolated feature, moderate config
+change. Lightweight plan, test-after by default, one lightweight review pass.
+
+**Level 2 — Complex.** Auth/authorization changes, database migrations, significant business
+logic, multi-service features, architectural changes, high-risk production behavior. Approach
+may need confirming first (`brainstorming/`), TDD is worth considering, review is more
+thorough, `security/`'s trigger list likely applies.
+
+**Level 3 — Large / Parallelizable.** Many independent migrations, multiple independent
+services, a feature spanning systems. Decompose, consider `scaling/` for subagent dispatch,
+integration verification is mandatory, one final whole-change review.
+
+The ratchet is one-way within a task: hidden complexity discovered mid-task can upgrade the
+level (stop, say so, re-route). Nothing downgrades mid-task just because it's mostly done.
 
 ---
 
-## 2. Build Incrementally
+## Budget Awareness
 
-Prefer small, useful increments over large speculative implementations.
+Soft, behavioral targets — not an accounting exercise. Don't spend tokens computing exact
+consumption per phase.
 
-When the result can be observed early:
+| Level | Tokens | Time |
+|---|---|---|
+| 0 | < 2K | < 1 min |
+| 1 | < 15K | < 5 min |
+| 2 | < 40K | < 15 min |
+| 3 | < 100K | < 30 min |
 
-```text
-Understand → Plan → Build → Observe → Iterate
+When approaching a target: stop unnecessary work, reassess scope, take the cheapest useful next
+action, avoid speculative improvements, split the task if that's the actual fix. Do not
+automatically abort a legitimate task just because a soft target was crossed — the target is a
+prompt to reassess, not a hard stop.
+
+---
+
+## Shared Risk List
+
+Reused by `testing/`, `review/`, and `security/` — one taxonomy, not a separate one per
+sub-skill: authentication/authorization, cryptography, payments, sensitive data/PII, destructive
+operations, infrastructure, significant architectural changes, high-impact client-facing
+functionality, and anything else where failure has substantial consequence.
+
+---
+
+## Routing
+
+| Level | Flow |
+|---|---|
+| 0 | inspect → change → self-check → done |
+| 1 | understand → `planning/` (3-5 bullets) → implement → `testing/` if signaled → `review/` (lightweight) → done |
+| 2 | understand → `brainstorming/` if the approach is genuinely uncertain → `planning/` → implement → `testing/` (TDD worth considering) → `review/` (thorough) → `security/` if triggered → done |
+| 3 | `planning/` → decompose → `scaling/` if subagent dispatch pays for itself → execute → integration verification → one final whole-change `review/` → done |
+
+Debugging: route to `debugging/` whenever the primary task is diagnosing a defect, at whatever
+level the fix itself turns out to be. Release checks: route to `release-gate/` before declaring
+any Level 1+ task done — it picks the applicable subset of build/test/lint/migration/security
+checks rather than running everything or nothing.
+
+---
+
+## Escalation
+
+Ask the user when — not by default, only when:
+
+1. requirements are genuinely ambiguous and a cheap local check (existing file, config,
+   pattern) doesn't resolve it
+2. multiple materially different approaches have no clear winner
+3. a security-sensitive decision can't be made safely without more context
+4. scope must materially increase beyond what was agreed
+5. risk is high and real uncertainty remains
+
+Investigate first if repository evidence can resolve it — a clarifying question and a
+speculative exploration pass both cost a round trip; pick whichever actually resolves it
+cheaper, and prefer neither when a fast local check already answers it.
+
+Keep escalation concise: state the issue, 2-3 options (not five speculative ones), a
+recommendation, and the impact of each — then wait.
+
+---
+
+## Stop Rules
+
+Stop when acceptance criteria are met, verification provides sufficient evidence, no blocking
+issues remain, and no unresolved decision needs the user. Do not: search indefinitely for
+hypothetical problems, refactor unrelated code, add tests solely for coverage, improve
+already-correct code without a requirement, or keep reviewing after actionable issues are
+exhausted. A completed task ends — it doesn't get polished indefinitely.
+
+---
+
+## Scope Lock
+
+Don't expand a task because something unrelated was discovered along the way. Complete the
+requested work, verify it, mention the unrelated finding, stop. Expand scope only when it's
+required for correctness, security, or verification of the actual task — or the user explicitly
+asks.
+
+---
+
+## State (`.lie/state.md`)
+
+Optional — create only when a task genuinely spans sessions or context is degrading enough that
+losing track of decisions would cost more than the file does. Not for Level 0/1 work, and not a
+default for every Level 2/3 task either.
+
+```markdown
+## Goal
+## Current Status
+## Decisions
+## Constraints
+## Changed Files
+## Verification
+## Remaining Work
 ```
 
-Get useful feedback before investing heavily in work that may need to be discarded.
-
-Do not prematurely optimize, refactor, abstract, document, test, or review work that is still likely to change.
-
----
-
-## 3. Do Not Default to TDD
-
-Testing is **not automatically required for every task**.
-
-Only invoke the testing sub-skill when a testing requirement is actually detected — see `testing/SKILL.md` for the detection procedure. Detection is signal-based, not assumption-based, and is ordered cheapest-first so resolving it never costs more than the task justifies.
-
-Do not write large numbers of tests simply because code was implemented.
+Store durable decisions, rationale, status, and evidence — never conversation transcripts,
+chain-of-thought, or output easily re-derived by re-reading the repo. Before clearing context on
+a multi-session task: update the file. After: read it, inspect current repo state, continue.
 
 ---
 
-## 4. Review Is Mandatory
+## Completion
 
-Every completed implementation receives a review pass before it is considered done.
+Work is done when: the requested behavior is implemented, it fits the existing project,
+required verification ran (`release-gate/`), review happened at the appropriate depth, tests
+were written if signaled or requested, a final whole-change review ran for multi-task work, and
+no unintended changes remain. If the work lives on a branch, confirm the base branch and offer
+the real integration options — merge now, push and open a PR, or leave it as-is — don't assume
+merge just because the diff looks done, and don't discard anything without an explicit request.
 
-However, the default review should be lightweight:
-
-* self-review, or
-* one quick reviewer pass
-
-The default review should not involve multiple agents, separate review packages, extensive reports, or repeated review cycles.
-
-Escalate review only when the risk or complexity justifies it.
-
----
-
-## 5. Review Risk, Not Ceremony
-
-Use deeper review for changes involving:
-
-* authentication or authorization
-* security
-* cryptography
-* payments
-* sensitive data
-* destructive operations
-* infrastructure
-* significant architectural changes
-* high-impact client-facing functionality
-* other changes where failure has substantial consequences
-
-For ordinary changes, keep review fast and focused.
-
-This same risk list is reused elsewhere in LIE (e.g. deciding whether to ask the user about testing) rather than maintaining a second taxonomy.
+Scale the completion response to the task: a Level 0/1 fix gets a sentence or two with what was
+verified; Level 2/3 work gets changes, verification, review outcome, and any remaining risk —
+never "looks good" without the evidence behind it.
 
 ---
 
-## 6. Final Whole-Change Review
-
-When a request consists of multiple related tasks, perform **one final whole-change review** after all tasks are implemented and basic verification is complete.
-
-This review exists to catch issues that individual task reviews cannot see:
-
-* cross-task inconsistencies
-* integration problems
-* conflicting changes
-* duplicated logic
-* architectural drift
-* unintended interactions
-* incomplete end-to-end behavior
-
-Do not replace this with a heavy review after every task.
-
----
-
-## 7. Evidence Over Assumption
-
-Do not claim that work is complete because the code appears correct.
-
-Use appropriate evidence:
-
-* run relevant commands
-* run the application when practical
-* inspect output
-* reproduce fixes
-* inspect the final diff
-* run required project checks
-
-Verification should be proportional to the change.
-
----
-
-## 8. Resolve Ambiguity Cheaply, Not by Default Questioning
-
-When something is unclear, do not treat "ask the user" as the default resolution.
-
-Prefer, in order:
-
-1. A cheap, local signal check (existing file, existing config, existing pattern).
-2. A reasonable default consistent with the rest of the codebase.
-3. Asking the user — only when cheap checks fail to resolve it **and** the cost of guessing wrong is high (risk-listed work, or irreversible/destructive actions).
-
-Broad exploration performed just to avoid asking a question is not "cheap" — it can cost more than the question would have. Don't do that either. A clarifying question and a speculative exploration pass are both round-trip costs; pick whichever is actually cheaper, and prefer neither when a fast local check settles it.
-
----
-
-# Workflow
-
-## Step 1 — Understand
-
-Determine:
-
-* What is being requested?
-* What part of the system is affected?
-* Is the behavior already clearly defined?
-* Are there important unknowns?
-
-Load `debugging/SKILL.md` when the task is primarily about diagnosing or fixing a bug.
-
----
-
-## Step 2 — Plan
-
-For anything beyond a trivial change, establish a concise implementation approach.
-
-The plan should be proportional to the task.
-
-Do not create extensive planning documents for simple work.
-
-For larger work, break the request into manageable tasks.
-
-If those tasks will be dispatched to subagents (rather than worked inline in this session), load `scaling/SKILL.md` before dispatching — it covers when dispatch is actually worth it, model selection, batching, and review, so multi-task work doesn't default into ceremony-heavy patterns.
-
-If, during implementation, the scope turns out to be materially larger than the original plan assumed, pause and confirm with the user before continuing rather than silently expanding scope.
-
----
-
-## Step 3 — Implement
-
-Build the requested change using existing project patterns.
-
-Prefer:
-
-* simple solutions
-* existing abstractions
-* small diffs
-* incremental implementation
-* minimal new dependencies
-
-Avoid:
-
-* speculative architecture
-* unnecessary abstractions
-* unrelated refactoring
-* premature optimization
-* work outside the requested scope
-
----
-
-## Step 4 — Iterate
-
-When the implementation can be meaningfully observed, inspect the result and adjust as necessary.
-
-Prefer:
-
-```text
-Build → Observe → Adjust
-```
-
-over attempting to predict every detail before seeing the result.
-
-If the user provides feedback, treat it as authoritative clarification of the intended result.
-
----
-
-## Step 5 — Testing Decision
-
-Before writing tests, run the cheap-first signal check defined in `testing/SKILL.md` ("Detecting a Testing Requirement").
-
-* **Signal found** (existing test file for the touched module, or a wired-in test command in CI/config) → invoke `testing/SKILL.md`.
-* **No signal found, normal risk** → skip testing, proceed without asking.
-* **No signal found, high risk** (per the risk list in Principle 5) → ask the user once, then proceed based on the answer.
-
-Do not treat "unclear" as a default reason to stop and ask. Ambiguity here is resolved by the two cheap checks in the testing sub-skill, not by a clarifying question, except in the high-risk case above.
-
-Do not create tests merely to increase coverage.
-
----
-
-## Step 6 — Lightweight Review
-
-Before considering the implementation complete, invoke:
-
-`review/SKILL.md`
-
-using the appropriate review depth.
-
-Default:
-
-**single lightweight review**
-
-Escalate only when justified by risk or complexity.
-
----
-
-## Step 7 — Final Whole-Change Review
-
-If the work contains multiple related tasks:
-
-After all tasks are implemented and basic checks are green:
-
-`review/SKILL.md`
-
-Perform one final review across the complete change.
-
-This is a single holistic pass.
-
-Do not repeat the full review separately for every task.
-
----
-
-## Step 8 — Verify
-
-Before declaring completion:
-
-* run required project checks
-* run tests that were required or detected
-* verify the requested behavior
-* inspect the final diff
-* confirm there are no obvious unintended changes
-
-Do not claim verification that was not actually performed.
-
----
-
-## Step 9 — Integration
-
-If the change lives on its own branch, completion isn't just "the diff is good" — the user still decides what happens to it. Confirm the base branch if it isn't obvious, then offer the real options: merge now, push and open a PR, or leave the branch as-is for later. Don't assume merge just because the work looks done, and don't discard anything unless explicitly asked to.
-
----
-
-# Routing
-
-LIE uses skills selectively.
-
-The diagram below covers a single task's understand → build → review loop. When
-Step 2 (Plan) breaks larger work into multiple tasks that will be dispatched to
-subagents, load `scaling/SKILL.md` before dispatching — it sits upstream of this
-loop, not inside it.
-
-```text
-                    TASK
-                      │
-                      ▼
-                UNDERSTAND
-                      │
-          ┌───────────┼───────────┐
-          │           │           │
-       Debug?    Test signal?   Normal
-          │           │           │
-          ▼           ▼           ▼
-      debugging    testing      BUILD
-          │           │           │
-          └───────────┴─────┬─────┘
-                            │
-                            ▼
-                         REVIEW
-                            │
-                  ┌─────────┴─────────┐
-                  │                   │
-             More tasks?          Complete
-                  │                   │
-                 YES                  ▼
-                  │             FINAL REVIEW
-                  │             if multi-task
-                  │                   │
-                  └─────────►         ▼
-                               VERIFY
-```
-
-### Routing rules
-
-**Debugging**
-
-Invoke when the primary task is diagnosing or fixing an existing defect.
-
-If the bug fix triggers a testing signal (or a regression test is the natural verification for that bug), route to testing after the fix, not instead of it — debugging and testing are not mutually exclusive branches.
-
-**Testing**
-
-Invoke only when the cheap-first signal check in `testing/SKILL.md` finds a signal, or the high-risk exception applies.
-
-**Review**
-
-Invoke for every completed implementation.
-
-Use lightweight review by default.
-
-Use deeper review when risk justifies it.
-
-For multi-task work, perform one additional final whole-change review.
-
-**Scaling**
-
-Invoke when Step 2 decides multiple tasks will be dispatched to subagents rather than worked inline. Covers dispatch criteria, model selection, batching, and per-task review depth — see `scaling/SKILL.md`.
-
-Do not automatically invoke every sub-skill.
-
----
-
-# Efficiency Rules
-
-The agent should continuously avoid work that does not materially improve the result.
-
-Avoid:
-
-* unnecessary test generation
-* redundant review passes
-* speculative abstractions
-* unrelated refactoring
-* excessive repository exploration
-* unnecessary documentation
-* repeated verification that provides no new information
-* large context collection without purpose
-* asking a clarifying question when a cheap local check would answer it
-* exploring broadly just to avoid asking a question — that isn't actually cheaper
-* dispatching a subagent on the session's default model when a cheaper one would do
-* one subagent dispatch per task when several same-shape tasks could be batched into one
-
-Prefer:
-
-* focused context
-* small changes
-* existing project patterns
-* fast feedback
-* proportional verification
-* meaningful evidence
-* the cheapest signal that actually resolves the ambiguity
-
-When two approaches provide similar confidence, prefer the one requiring less time and context.
-
----
-
-# Definition of Done
-
-Work is complete when:
-
-1. The requested behavior has been implemented.
-2. The implementation fits the existing project.
-3. Required verification has been performed.
-4. The mandatory lightweight review has been completed.
-5. Tests have been completed when a testing signal was detected or the user confirmed they're needed.
-6. A final whole-change review has been completed for multi-task work.
-7. No obvious unintended changes remain.
-8. If the work is on a branch, integration has been decided (see Step 9).
-
-Do not continue polishing indefinitely.
-
----
-
-# Core Rule
-
-> **Build what is needed. Get useful feedback early. Test when a real signal says to. Review every change, but review proportionally. Resolve ambiguity with the cheapest check that actually answers it. Harden the whole result once — not repeatedly.**
+## Core Rule
+
+> **Build what's needed. Confirm the approach once, cheaply, when it's genuinely uncertain.
+> Test when a real signal says to. Review every change, proportionally. Resolve ambiguity with
+> the cheapest check that actually answers it. Harden the whole result once — not repeatedly.**

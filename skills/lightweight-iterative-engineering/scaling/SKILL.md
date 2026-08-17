@@ -19,6 +19,8 @@ If the tasks are tightly coupled, or the main session already holds all the cont
 
 When multiple independent problem domains genuinely qualify (e.g. unrelated failures in different files or subsystems), dispatch all of them in a single message — multiple dispatches in one message run in parallel; one dispatch per message runs them sequentially and burns wall-clock time for no benefit.
 
+Every dispatched agent gets a self-contained prompt: the specific scope, the goal, any constraints, and exactly what to return. It never inherits the dispatching session's own context or history — construct what it needs explicitly. This keeps the agent focused and preserves the dispatcher's own context for coordination.
+
 ---
 
 ## Model Selection
@@ -43,7 +45,9 @@ Reserve one-dispatch-per-task for work that needs its own judgment, its own test
 
 ## Review
 
-One reviewer pass per task or batch — reuse the risk-based escalation already defined in `../review/SKILL.md`. Do not:
+One reviewer pass per task or batch — reuse the risk-based escalation already defined in `../review/SKILL.md`. Tier the reviewer's model the same way as any other dispatch (see Model Selection above): a diff-scoped, mechanical check (does the change match the spec, obvious lint-shaped issues) is mechanical work — cheapest model. Review requiring actual judgment (architecture fit, security, correctness under ambiguity) needs the standard or most capable tier. Do not default every reviewer dispatch to the session's main model regardless of what it's actually checking — that's how a review pass turns into the most expensive step in the loop for no added confidence.
+
+Do not:
 
 * run a separate spec-compliance pass and a separate quality pass,
 * run a fixed number of fix-and-re-review rounds,
