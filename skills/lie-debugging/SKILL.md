@@ -1,3 +1,14 @@
+---
+name: lie-debugging
+description: >
+  LIE capability skill: systematic reproduce-investigate-root cause-fix-verify
+  workflow for diagnosing defects, with a 3-failed-fix escalation rule. Part
+  of the lightweight-iterative-engineering (LIE) workflow — invoked by LIE's
+  own routing whenever the primary task is diagnosing a defect, not on its
+  own. If LIE is not already active for this task, invoke
+  lightweight-iterative-engineering first instead of this skill directly.
+---
+
 # Debugging
 
 ## Purpose
@@ -100,7 +111,7 @@ Verify that:
 * the expected behavior works
 * the fix does not introduce an obvious regression
 
-Run the testing sub-skill's cheap-first signal check (see `../testing/SKILL.md`) to determine whether a regression test is warranted — a bug fix commonly satisfies signal 1 or 2 on its own (e.g. it touches a file that already has a test sibling). If no signal is found and the fix is not high-risk, verify via reproduction and manual check instead of writing a test.
+Run `lie-testing`'s cheap-first signal check to determine whether a regression test is warranted — a bug fix commonly satisfies signal 1 or 2 on its own (e.g. it touches a file that already has a test sibling). If no signal is found and the fix is not high-risk, verify via reproduction and manual check instead of writing a test.
 
 ---
 

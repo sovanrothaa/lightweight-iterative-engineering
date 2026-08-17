@@ -1,3 +1,14 @@
+---
+name: lie-testing
+description: >
+  LIE capability skill: decide whether a testing requirement is actually
+  present via a cheap signal check, and how to test proportionally when it
+  is. Part of the lightweight-iterative-engineering (LIE) workflow — invoked
+  by LIE's own routing, not on its own. If LIE is not already active for
+  this task, invoke lightweight-iterative-engineering first instead of this
+  skill directly.
+---
+
 # Testing
 
 ## Purpose
@@ -34,7 +45,7 @@ Check signals in order of cost. Stop at the first hit — do not check further s
 ## When to Ask the User Instead of Deciding
 
 Only ask if steps 1–2 both find nothing **and** the change is high-risk
-per the parent skill's risk list (auth, authorization, cryptography,
+per the `lightweight-iterative-engineering` skill's shared risk list (auth, authorization, cryptography,
 payments, sensitive data, destructive operations, infrastructure, major
 architectural changes, high-impact client-facing functionality).
 

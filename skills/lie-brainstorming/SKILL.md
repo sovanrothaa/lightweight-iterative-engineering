@@ -1,3 +1,14 @@
+---
+name: lie-brainstorming
+description: >
+  LIE capability skill: confirm the approach once, cheaply, for genuinely
+  ambiguous or architectural Level 2/3 work before implementing. Part of the
+  lightweight-iterative-engineering (LIE) workflow — invoked by LIE's own
+  routing when uncertainty is real, not on its own and not for Level 0/1
+  work. If LIE is not already active for this task, invoke
+  lightweight-iterative-engineering first instead of this skill directly.
+---
+
 # Brainstorming
 
 ## Purpose
@@ -10,7 +21,7 @@ thing once, not to produce an artifact.
 
 ## When to Invoke
 
-Only for Level 2/3 work (per the root `SKILL.md`'s complexity classification) where the
+Only for Level 2/3 work (per the `lightweight-iterative-engineering` skill's complexity classification) where the
 uncertainty is real: a new subsystem, no existing pattern in this codebase to extend, or more
 than one reasonable approach with a real tradeoff between them.
 
@@ -43,7 +54,7 @@ Do not add ceremony beyond the above:
 
 * no mandatory spec file, no required commit of a design doc
 * no separate written-spec review pass distinct from the go-ahead in step 4
-* no multi-stage classification system — the root `SKILL.md`'s Level 0-3 already did that
+* no multi-stage classification system — the `lightweight-iterative-engineering` skill's Level 0-3 already did that
 * no visual/diagram tooling by default — use it only if the user asks or a layout/diagram
   question genuinely can't be described in words
 

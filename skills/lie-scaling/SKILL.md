@@ -1,3 +1,14 @@
+---
+name: lie-scaling
+description: >
+  LIE capability skill: when subagent dispatch pays for itself, model
+  tiering, batching, and reviewing multi-task work without ledger ceremony.
+  Part of the lightweight-iterative-engineering (LIE) workflow — invoked by
+  LIE's own routing for Level 3 or dispatch-worthy work, not on its own. If
+  LIE is not already active for this task, invoke
+  lightweight-iterative-engineering first instead of this skill directly.
+---
+
 # Scaling to Multi-Task Work
 
 ## Purpose
@@ -45,7 +56,7 @@ Reserve one-dispatch-per-task for work that needs its own judgment, its own test
 
 ## Review
 
-One reviewer pass per task or batch — reuse the risk-based escalation already defined in `../review/SKILL.md`. Tier the reviewer's model the same way as any other dispatch (see Model Selection above): a diff-scoped, mechanical check (does the change match the spec, obvious lint-shaped issues) is mechanical work — cheapest model. Review requiring actual judgment (architecture fit, security, correctness under ambiguity) needs the standard or most capable tier. Do not default every reviewer dispatch to the session's main model regardless of what it's actually checking — that's how a review pass turns into the most expensive step in the loop for no added confidence.
+One reviewer pass per task or batch — reuse the risk-based escalation already defined in `lie-review`. Tier the reviewer's model the same way as any other dispatch (see Model Selection above): a diff-scoped, mechanical check (does the change match the spec, obvious lint-shaped issues) is mechanical work — cheapest model. Review requiring actual judgment (architecture fit, security, correctness under ambiguity) needs the standard or most capable tier. Do not default every reviewer dispatch to the session's main model regardless of what it's actually checking — that's how a review pass turns into the most expensive step in the loop for no added confidence.
 
 Do not:
 
@@ -69,7 +80,7 @@ If, and only if, the work genuinely spans multiple sessions and would otherwise 
 
 ## Final Whole-Change Review
 
-This sub-skill does not redefine the final whole-change review — that's owned by `../review/SKILL.md` and the root `SKILL.md`'s Step 7. This section only covers how to reach that checkpoint cheaply when subagents are involved: dispatch narrowly, review each task once, batch what's mechanical, skip the ledger.
+This sub-skill does not redefine the final whole-change review — that's owned by `lie-review` and the `lightweight-iterative-engineering` skill's Completion section. This section only covers how to reach that checkpoint cheaply when subagents are involved: dispatch narrowly, review each task once, batch what's mechanical, skip the ledger.
 
 ---
 

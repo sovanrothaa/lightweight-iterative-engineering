@@ -1,8 +1,19 @@
+---
+name: lie-security
+description: >
+  LIE capability skill: concrete checklist for the security-specific subset
+  of the shared risk list (auth, crypto, injection, PII, and similar
+  triggers). Part of the lightweight-iterative-engineering (LIE) workflow —
+  invoked by LIE's own routing when a triggered surface is touched, not on
+  its own. If LIE is not already active for this task, invoke
+  lightweight-iterative-engineering first instead of this skill directly.
+---
+
 # Security
 
 ## Purpose
 
-Give the shared risk list (used by `review/SKILL.md` and `testing/SKILL.md`) a concrete checklist
+Give the shared risk list (used by `lie-review` and `lie-testing`) a concrete checklist
 for the security-specific subset of it, instead of leaving "security" as an unexamined line item.
 
 ---
@@ -57,7 +68,7 @@ triggered by every change, it's a targeted check for the surfaces above.
    user rather than guess.
 
 This escalates the change to at least the shared risk list's "high risk" review depth in
-`review/SKILL.md` — it doesn't replace that review, it's the specific content of it for
+`lie-review` — it doesn't replace that review, it's the specific content of it for
 security-triggered work.
 
 ---

@@ -1,3 +1,14 @@
+---
+name: lie-review
+description: >
+  LIE capability skill: one focused review pass, escalated by risk, with a
+  final whole-change review for multi-task work. Part of the
+  lightweight-iterative-engineering (LIE) workflow — invoked by LIE's own
+  routing before declaring work done, not on its own. If LIE is not already
+  active for this task, invoke lightweight-iterative-engineering first
+  instead of this skill directly.
+---
+
 # Review
 
 ## Purpose
@@ -38,7 +49,7 @@ Do not automatically create:
 
 When the reviewer is a subagent, hand it the diff (as a file, or a precise commit range) and what the change should do — not the dispatcher's own session history. A reviewer evaluates the work product; re-deriving how you got there wastes its context and yours.
 
-Tier the model to what the review actually requires — see `../scaling/SKILL.md`'s Model Selection. A reviewer given open-ended scope and the session's most capable model by default is how a review pass balloons into the most expensive step for no added confidence.
+Tier the model to what the review actually requires — see `lie-scaling`'s Model Selection. A reviewer given open-ended scope and the session's most capable model by default is how a review pass balloons into the most expensive step for no added confidence.
 
 ---
 

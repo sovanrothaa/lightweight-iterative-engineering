@@ -29,9 +29,11 @@ When LIE is active, it decides the process for a task — whether planning, brai
 testing, deeper review, or a subagent dispatch is warranted, and when the task is done. Other
 installed skills or workflows may offer specialized techniques, but do not get to impose their
 own process on top of LIE's once it's active — that's how ceremony compounds when skills stack.
-LIE's own sub-skills (`planning/`, `brainstorming/`, `testing/`, `debugging/`, `review/`,
-`security/`, `scaling/`, `release-gate/`) are capabilities LIE routes to deliberately, not
-independent triggers.
+LIE's own capability skills (`lie-planning`, `lie-brainstorming`, `lie-testing`, `lie-debugging`,
+`lie-review`, `lie-security`, `lie-scaling`, `lie-release-gate`) are discoverable individually so
+their invocation is visible, but they are capabilities this skill routes to deliberately per the
+table below — not independent triggers. Don't invoke one of them because it showed up in a skill
+list; invoke it because this routing says to.
 
 > **Never perform a process step because the framework can. Perform it because the task
 > benefits from it.**
@@ -72,11 +74,11 @@ change. Lightweight plan, test-after by default, one lightweight review pass.
 
 **Level 2 — Complex.** Auth/authorization changes, database migrations, significant business
 logic, multi-service features, architectural changes, high-risk production behavior. Approach
-may need confirming first (`brainstorming/`), TDD is worth considering, review is more
-thorough, `security/`'s trigger list likely applies.
+may need confirming first (`lie-brainstorming`), TDD is worth considering, review is more
+thorough, `lie-security`'s trigger list likely applies.
 
 **Level 3 — Large / Parallelizable.** Many independent migrations, multiple independent
-services, a feature spanning systems. Decompose, consider `scaling/` for subagent dispatch,
+services, a feature spanning systems. Decompose, consider `lie-scaling` for subagent dispatch,
 integration verification is mandatory, one final whole-change review.
 
 The ratchet is one-way within a task: hidden complexity discovered mid-task can upgrade the
@@ -105,8 +107,8 @@ prompt to reassess, not a hard stop.
 
 ## Shared Risk List
 
-Reused by `testing/`, `review/`, and `security/` — one taxonomy, not a separate one per
-sub-skill: authentication/authorization, cryptography, payments, sensitive data/PII, destructive
+Reused by `lie-testing`, `lie-review`, and `lie-security` — one taxonomy, not a separate one per
+capability: authentication/authorization, cryptography, payments, sensitive data/PII, destructive
 operations, infrastructure, significant architectural changes, high-impact client-facing
 functionality, and anything else where failure has substantial consequence.
 
@@ -114,15 +116,19 @@ functionality, and anything else where failure has substantial consequence.
 
 ## Routing
 
+Invoke capabilities via the `Skill` tool by name. Each name below is a real, individually
+discoverable skill — visible so you can see it fire, but only invoke it when this table calls
+for it, not because it appeared in a skill list.
+
 | Level | Flow |
 |---|---|
 | 0 | inspect → change → self-check → done |
-| 1 | understand → `planning/` (3-5 bullets) → implement → `testing/` if signaled → `review/` (lightweight) → done |
-| 2 | understand → `brainstorming/` if the approach is genuinely uncertain → `planning/` → implement → `testing/` (TDD worth considering) → `review/` (thorough) → `security/` if triggered → done |
-| 3 | `planning/` → decompose → `scaling/` if subagent dispatch pays for itself → execute → integration verification → one final whole-change `review/` → done |
+| 1 | understand → `lie-planning` (3-5 bullets) → implement → `lie-testing` if signaled → `lie-review` (lightweight) → done |
+| 2 | understand → `lie-brainstorming` if the approach is genuinely uncertain → `lie-planning` → implement → `lie-testing` (TDD worth considering) → `lie-review` (thorough) → `lie-security` if triggered → done |
+| 3 | `lie-planning` → decompose → `lie-scaling` if subagent dispatch pays for itself → execute → integration verification → one final whole-change `lie-review` → done |
 
-Debugging: route to `debugging/` whenever the primary task is diagnosing a defect, at whatever
-level the fix itself turns out to be. Release checks: route to `release-gate/` before declaring
+Debugging: route to `lie-debugging` whenever the primary task is diagnosing a defect, at whatever
+level the fix itself turns out to be. Release checks: route to `lie-release-gate` before declaring
 any Level 1+ task done — it picks the applicable subset of build/test/lint/migration/security
 checks rather than running everything or nothing.
 
@@ -192,7 +198,7 @@ a multi-session task: update the file. After: read it, inspect current repo stat
 ## Completion
 
 Work is done when: the requested behavior is implemented, it fits the existing project,
-required verification ran (`release-gate/`), review happened at the appropriate depth, tests
+required verification ran (`lie-release-gate`), review happened at the appropriate depth, tests
 were written if signaled or requested, a final whole-change review ran for multi-task work, and
 no unintended changes remain. If the work lives on a branch, confirm the base branch and offer
 the real integration options — merge now, push and open a PR, or leave it as-is — don't assume

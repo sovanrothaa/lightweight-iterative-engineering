@@ -69,20 +69,24 @@ lightweight-iterative-engineering/
 │   ├── session-start
 │   └── run-hook.cmd      # Windows/POSIX polyglot wrapper
 └── skills/
-    └── lightweight-iterative-engineering/   # the one discoverable skill (entry point)
-        ├── SKILL.md          # workflow authority, complexity levels, routing, stop rules
-        ├── planning/SKILL.md
-        ├── brainstorming/SKILL.md   # Level 2/3 only: confirm the approach once, cheaply
-        ├── testing/SKILL.md
-        ├── debugging/SKILL.md
-        ├── review/SKILL.md
-        ├── security/SKILL.md
-        ├── scaling/SKILL.md         # subagent dispatch, model tiering, batching
-        └── release-gate/SKILL.md    # adaptive per-change verification checklist
+    ├── lightweight-iterative-engineering/SKILL.md   # entry point: workflow authority,
+    │                                                 # complexity levels, routing, stop rules
+    ├── lie-planning/SKILL.md
+    ├── lie-brainstorming/SKILL.md   # Level 2/3 only: confirm the approach once, cheaply
+    ├── lie-testing/SKILL.md
+    ├── lie-debugging/SKILL.md
+    ├── lie-review/SKILL.md
+    ├── lie-security/SKILL.md
+    ├── lie-scaling/SKILL.md         # subagent dispatch, model tiering, batching
+    └── lie-release-gate/SKILL.md    # adaptive per-change verification checklist
 ```
 
-`SKILL.md` is the entry point and routes into sub-skills only when the complexity level and
-task shape call for it — nothing fires automatically just because it exists.
+Each `lie-*` capability is its own individually discoverable skill — so you can see exactly
+which one fires, the same way superpowers' skills each show up separately — but every one of
+them is scoped by its own `description` to being invoked by `lightweight-iterative-engineering`'s
+routing, not independently. `lightweight-iterative-engineering` is the entry point and routes
+into a capability only when the complexity level and task shape call for it — nothing fires
+automatically just because it's visible in a skill list.
 
 ## Usage
 

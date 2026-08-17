@@ -1,3 +1,13 @@
+---
+name: lie-planning
+description: >
+  LIE capability skill: write the smallest plan that reduces implementation
+  risk, sized to task complexity (Level 0-3). Part of the
+  lightweight-iterative-engineering (LIE) workflow — invoked by LIE's own
+  routing, not on its own. If LIE is not already active for this task, invoke
+  lightweight-iterative-engineering first instead of this skill directly.
+---
+
 # Planning
 
 ## Purpose
@@ -30,8 +40,8 @@ clarify approach before building, not to become a deliverable in its own right.
 
 **Level 2/3** — expand only where more detail actually reduces implementation risk: affected
 components, sequencing if tasks depend on each other, and what a subagent dispatch needs if
-`../scaling/SKILL.md` applies. If the approach itself is still uncertain at this size, that's
-`../brainstorming/SKILL.md`'s job first — planning assumes the approach is already decided.
+`lie-scaling` applies. If the approach itself is still uncertain at this size, that's
+`lie-brainstorming`'s job first — planning assumes the approach is already decided.
 
 ---
 
@@ -48,8 +58,8 @@ components, sequencing if tasks depend on each other, and what a subagent dispat
 * explain code that's self-explanatory
 * produce a plan document for Level 0/1 work
 * spend more time planning than the task warrants
-* treat the plan as fixed once reality disagrees with it — see Scope Lock in the root `SKILL.md`
-  for what to do when scope grows mid-task
+* treat the plan as fixed once reality disagrees with it — see Scope Lock in the
+  `lightweight-iterative-engineering` skill for what to do when scope grows mid-task
 
 ---
 
