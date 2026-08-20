@@ -4,9 +4,9 @@ description: >
   LIE capability skill: capture a real, repeated correction to a lie-*
   skill's guidance, or a documented gap in one, into the skill library
   itself instead of relying on being reminded again next session. This is
-  the skill-evolution workflow under LIE — a generic skill-evolution or
-  skill-authoring skill doesn't get to run instead once LIE is active, even
-  if its own description also matches. Part of the
+  the skill-evolution workflow under LIE — a generic skill-evolution skill
+  doesn't get to run instead once LIE is active for patching an existing
+  lie-* skill's guidance, even if its own description also matches. Part of the
   lightweight-iterative-engineering (LIE) workflow — invoked by LIE's own
   routing when a correction to LIE's own guidance recurs or a gap in a
   lie-*/SKILL.md surfaces, not on its own. If LIE is not already active for

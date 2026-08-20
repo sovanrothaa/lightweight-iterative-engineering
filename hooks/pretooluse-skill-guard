@@ -40,7 +40,8 @@ find_match "superpowers:receiving-code-review" "lie-review" ||
 find_match "superpowers:dispatching-parallel-agents" "lie-scaling" ||
 find_match "superpowers:subagent-driven-development" "lie-scaling" ||
 find_match "superpowers:verification-before-completion" "lie-release-gate" ||
-find_match "rothveil-claude-skills:rothveil-skill-evolution" "lie-evolution"
+find_match "rothveil-claude-skills:rothveil-skill-evolution" "lie-evolution" ||
+find_match "security-review" "lie-security"
 
 if [ -z "$lie_equivalent" ]; then
   exit 0
