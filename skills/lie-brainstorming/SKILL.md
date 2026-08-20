@@ -40,14 +40,19 @@ auth check" is Level 2 by risk but not ambiguous — skip straight to a lightwei
    constraints, what "done" looks like. Ask only what's actually unclear; prefer one focused
    question over several if the request is mostly clear.
 2. **Propose 2-3 approaches** with real tradeoffs. Lead with a recommendation and say why.
-   YAGNI ruthlessly — cut speculative features from every approach before presenting it.
+   YAGNI ruthlessly — cut speculative features from every approach before presenting it. For
+   Level 3, verify each approach's key assumptions against the actual codebase before presenting
+   it — confirm the pattern it leans on really exists, the dependency really behaves as assumed
+   — rather than presenting what's merely plausible from pattern-matching.
 3. **Present briefly.** Scale to the task: a genuinely new subsystem might warrant a short
    paragraph per approach; most Level 2/3 work is a few sentences total. This is conversation,
    not a document.
 4. **Get a quick go-ahead before implementing.** State the recommended approach and wait for a
    yes (or a redirect) before writing code. This is the one part of the process that doesn't
    scale away with task size — a wrong assumption caught here costs a sentence; caught after
-   implementation it costs the implementation.
+   implementation it costs the implementation. For Level 3, state the recommendation alongside a
+   brief self-critique — what could go wrong with this approach — so the go-ahead confirms a
+   checked plan, not a first read.
 
 ---
 
