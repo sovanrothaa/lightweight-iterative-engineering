@@ -78,7 +78,7 @@ Every dispatched subagent still returns one short, fixed-shape block instead of 
 
 A normal todo list — one line per task, done or not-done — is enough to track this for a single session.
 
-If, and only if, the work genuinely spans multiple sessions and would otherwise lose track of what's done, use the `lightweight-iterative-engineering` skill's `.lie/state.md` — record each completed task's report-contract summary under Changed Files / Remaining Work. Don't invent a second status-tracking mechanism alongside it.
+If, and only if, the work genuinely spans multiple sessions and would otherwise lose track of what's done, use `lie-continuity`'s `.lie/state.md` — record each completed task's report-contract summary under Changed Files / Remaining Work. Don't invent a second status-tracking mechanism alongside it.
 
 ---
 
