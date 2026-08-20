@@ -10,7 +10,9 @@ of that discipline that matter (mandatory review, evidence-based verification, s
 debugging, an approval checkpoint on genuinely ambiguous work) and cuts the parts that don't
 scale with task size.
 
-> v0.6 — added a `PreToolUse` guard that mechanically denies a `Skill` call into a competing
+> v0.7 — added `lie-evolution`, a capability skill that captures a recurring correction or a
+> documented gap in an existing `lie-*/SKILL.md` into the skill library itself, instead of
+> relying on being reminded again each session. v0.6 — added a `PreToolUse` guard that mechanically denies a `Skill` call into a competing
 > skill when LIE already has a documented equivalent (e.g. a generic brainstorming or TDD skill),
 > pointing the caller at the right `lie-*` skill instead — enforcement, not just a description-level
 > claim. v0.5 made each `lie-*` capability skill individually discoverable (visible in skill
@@ -88,7 +90,8 @@ lightweight-iterative-engineering/
     ├── lie-review/SKILL.md
     ├── lie-security/SKILL.md
     ├── lie-scaling/SKILL.md         # subagent dispatch, model tiering, batching
-    └── lie-release-gate/SKILL.md    # adaptive per-change verification checklist
+    ├── lie-release-gate/SKILL.md    # adaptive per-change verification checklist
+    └── lie-evolution/SKILL.md       # captures recurring corrections/gaps into the skill library
 ```
 
 Each `lie-*` capability is its own individually discoverable skill — so you can see exactly
