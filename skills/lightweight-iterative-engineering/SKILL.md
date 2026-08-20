@@ -9,8 +9,9 @@ description: >
   decision. A full-lifecycle, proportional software engineering workflow for
   AI coding tasks: workflow authority, complexity-based routing (Level 0-3),
   and capability sub-skills for planning, brainstorming, testing, debugging,
-  review, security, scaling to subagents, release checks, and evolving its
-  own skill library. Auto-activates at session start via hook as the
+  review, security, scaling to subagents, release checks, documentation,
+  multi-session continuity, and evolving its own skill library.
+  Auto-activates at session start via hook as the
   default engineering workflow authority —
   use it for any non-trivial coding task (bug fix, feature, refactor,
   migration, review, new system/design work) even without the hook present,
@@ -39,7 +40,8 @@ testing, deeper review, or a subagent dispatch is warranted, and when the task i
 installed skills or workflows may offer specialized techniques, but do not get to impose their
 own process on top of LIE's once it's active — that's how ceremony compounds when skills stack.
 LIE's own capability skills (`lie-planning`, `lie-brainstorming`, `lie-testing`, `lie-debugging`,
-`lie-review`, `lie-security`, `lie-scaling`, `lie-release-gate`, `lie-evolution`) are discoverable
+`lie-review`, `lie-security`, `lie-scaling`, `lie-release-gate`, `lie-documentation`,
+`lie-continuity`, `lie-evolution`) are discoverable
 individually so their invocation is visible, but they are capabilities this skill routes to per the
 table below — not independent triggers. Don't invoke one of them because it showed up in a skill
 list; invoke it because this routing says to.
@@ -139,9 +141,13 @@ for it, not because it appeared in a skill list.
 Debugging: route to `lie-debugging` whenever the primary task is diagnosing a defect, at whatever
 level the fix itself turns out to be. Release checks: route to `lie-release-gate` before declaring
 any Level 1+ task done — it picks the applicable subset of build/test/lint/migration/security
-checks rather than running everything or nothing. Skill evolution: route to `lie-evolution` when a
-correction to LIE's own guidance recurs, or a documented gap in a `lie-*/SKILL.md` surfaces during
-the work — it captures the fix into the skill library instead of relying on being reminded again.
+checks rather than running everything or nothing. Documentation: route to `lie-documentation`
+when `lie-release-gate`'s documentation-update check applies. Continuity: route to
+`lie-continuity` only when a task genuinely spans sessions or context is degrading enough that
+losing track of decisions would cost more than maintaining state does — not a default for every
+Level 2/3 task. Skill evolution: route to `lie-evolution` when a correction to LIE's own guidance
+recurs, or a documented gap in a `lie-*/SKILL.md` surfaces during the work — it captures the fix
+into the skill library instead of relying on being reminded again.
 
 ---
 
@@ -184,25 +190,10 @@ asks.
 
 ---
 
-## State (`.lie/state.md`)
+## Continuity
 
-Optional — create only when a task genuinely spans sessions or context is degrading enough that
-losing track of decisions would cost more than the file does. Not for Level 0/1 work, and not a
-default for every Level 2/3 task either.
-
-```markdown
-## Goal
-## Current Status
-## Decisions
-## Constraints
-## Changed Files
-## Verification
-## Remaining Work
-```
-
-Store durable decisions, rationale, status, and evidence — never conversation transcripts,
-chain-of-thought, or output easily re-derived by re-reading the repo. Before clearing context on
-a multi-session task: update the file. After: read it, inspect current repo state, continue.
+For a task that genuinely spans sessions, see `lie-continuity` — the `.lie/state.md` template,
+checkpointing, and safe-resume guidance all live there now.
 
 ---
 
@@ -211,8 +202,9 @@ a multi-session task: update the file. After: read it, inspect current repo stat
 Work is done when: the requested behavior is implemented, it fits the existing project,
 required verification ran (`lie-release-gate`), review happened at the appropriate depth, tests
 were written if signaled or requested, a final whole-change review ran for multi-task work, any
-recurring correction or documented gap surfaced during the work has been checked against
-`lie-evolution`'s trigger, and no unintended changes remain. If the work lives on a branch,
+multi-session state was closed out per `lie-continuity` if it was in use, any recurring
+correction or documented gap surfaced during the work has been checked against `lie-evolution`'s
+trigger, and no unintended changes remain. If the work lives on a branch,
 confirm the base branch and offer the real integration options — merge now, push and open a PR,
 or leave it as-is — don't assume
 merge just because the diff looks done, and don't discard anything without an explicit request.

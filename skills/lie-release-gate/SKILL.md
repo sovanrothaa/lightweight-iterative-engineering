@@ -35,7 +35,7 @@ Not a checklist to complete in full every time — a menu to select from:
 * database migration verification, if the change includes a migration
 * security review, if `lie-security`'s trigger list applies
 * rollback readiness, only for genuinely high-risk or destructive changes
-* documentation update, only if the change alters a documented interface or behavior
+* documentation update, if `lie-documentation`'s trigger applies
 
 ---
 

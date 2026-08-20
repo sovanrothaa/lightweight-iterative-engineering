@@ -10,7 +10,10 @@ of that discipline that matter (mandatory review, evidence-based verification, s
 debugging, an approval checkpoint on genuinely ambiguous work) and cuts the parts that don't
 scale with task size.
 
-> v0.7 — added `lie-evolution`, a capability skill that captures a recurring correction or a
+> v0.8 — added `lie-continuity` (multi-session state, checkpointing, and safe-resume guidance,
+> replacing the inline `.lie/state.md` section) and `lie-documentation` (concrete guidance for
+> `lie-release-gate`'s documentation-update check), and extended the `PreToolUse` guard to cover
+> `executing-plans`. v0.7 — added `lie-evolution`, a capability skill that captures a recurring correction or a
 > documented gap in an existing `lie-*/SKILL.md` into the skill library itself, instead of
 > relying on being reminded again each session. v0.6 — added a `PreToolUse` guard that mechanically denies a `Skill` call into a competing
 > skill when LIE already has a documented equivalent (e.g. a generic brainstorming or TDD skill),
@@ -91,6 +94,8 @@ lightweight-iterative-engineering/
     ├── lie-security/SKILL.md
     ├── lie-scaling/SKILL.md         # subagent dispatch, model tiering, batching
     ├── lie-release-gate/SKILL.md    # adaptive per-change verification checklist
+    ├── lie-documentation/SKILL.md   # concrete guidance for lie-release-gate's doc-update check
+    ├── lie-continuity/SKILL.md      # multi-session state, checkpointing, safe-resume
     └── lie-evolution/SKILL.md       # captures recurring corrections/gaps into the skill library
 ```
 
