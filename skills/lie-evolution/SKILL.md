@@ -81,6 +81,9 @@ Applies once a patch or new skill is actually ready to ship:
 * Update `README.md`'s Structure tree (and its changelog blurb, for a new skill).
 * Bump `plugin.json` and `marketplace.json` together — patch for fixing existing guidance,
   minor for a new skill.
+* Create and push a matching git tag (`vX.Y.Z`, e.g. `v0.8.3`) on the bump commit — every
+  version bump gets one, no exceptions. The version field alone is invisible without reading
+  file history; the tag makes it discoverable.
 * Otherwise this is a normal shippable change — route it through `lie-release-gate` and LIE's
   own Completion step like any other change; skill evolution doesn't get a separate completion
   process.
