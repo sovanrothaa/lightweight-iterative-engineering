@@ -25,14 +25,26 @@ Guidance for work large enough to be broken into multiple tasks or dispatched to
 
 Dispatch only when:
 
-* the task is genuinely independent of the others (different files, different subsystem), or
+* the task is genuinely independent of the others (different files, different subsystem, and — see Shared Environment below — no shared runtime resource), or
 * isolating its context clearly pays for itself (it would otherwise pollute the main session with detail irrelevant to the rest of the work).
 
 If the tasks are tightly coupled, or the main session already holds all the context needed, keep working inline. Dispatch has a fixed cost — paying it without a real isolation or focus benefit is waste.
 
+Size alone is a weak signal, not a threshold. A tiny, obvious, low-risk edit stays inline even when it's technically independent — dispatching it just pays the fixed cost for nothing. A small change to a high-risk or cross-cutting surface (auth, payments, migrations, a public route) can still deserve isolation despite being a few lines. Don't adopt a fixed line-count or file-count rule — weigh risk and coupling over size.
+
 When multiple independent problem domains genuinely qualify (e.g. unrelated failures in different files or subsystems), dispatch all of them in a single message — multiple dispatches in one message run in parallel; one dispatch per message runs them sequentially and burns wall-clock time for no benefit.
 
 Every dispatched agent gets a self-contained prompt: the specific scope, the goal, any constraints, and exactly what to return. It never inherits the dispatching session's own context or history — construct what it needs explicitly. This keeps the agent focused and preserves the dispatcher's own context for coordination.
+
+---
+
+## Shared Environment
+
+Code-level independence does not guarantee runtime independence. Two tasks can touch different files and still collide on a shared mutable resource: databases and migrations, Docker/container lifecycle, local dev servers, seed/reset data, generated artifacts, shared external services.
+
+Parallel tasks may freely read shared state. Tasks that mutate or restart the same environment should be serialized, or one task should be given explicit ownership of that resource for the run — don't let two concurrent subagents each decide independently to reset a DB or rebuild a container.
+
+A subagent must not route around a denied or blocked operation by switching execution mechanism, tool, host, or container to get the same effect through a different door. Blocked means blocked — see Reporting.
 
 ---
 
@@ -58,7 +70,7 @@ Reserve one-dispatch-per-task for work that needs its own judgment, its own test
 
 ## Review
 
-One reviewer pass per task or batch — reuse the risk-based escalation already defined in `lie-review`. Tier the reviewer's model the same way as any other dispatch (see Model Selection above): a diff-scoped, mechanical check (does the change match the spec, obvious lint-shaped issues) is mechanical work — cheapest model. Review requiring actual judgment (architecture fit, security, correctness under ambiguity) needs the standard or most capable tier. Do not default every reviewer dispatch to the session's main model regardless of what it's actually checking — that's how a review pass turns into the most expensive step in the loop for no added confidence.
+One reviewer pass per task or batch — reuse the risk-based escalation already defined in `lie-review`. "Per task or batch" is not "per dispatched task": low- and medium-risk tasks merged together get one aggregate whole-change review over the merged result; a high-risk or ambiguous task (per `lie-review`'s risk list) gets its own targeted review. Don't spin up a dedicated reviewer for every cheap, mechanical dispatch — that's exactly the ceremony this skill exists to avoid. Tier the reviewer's model the same way as any other dispatch (see Model Selection above): a diff-scoped, mechanical check (does the change match the spec, obvious lint-shaped issues) is mechanical work — cheapest model. Review requiring actual judgment (architecture fit, security, correctness under ambiguity) needs the standard or most capable tier. Do not default every reviewer dispatch to the session's main model regardless of what it's actually checking — that's how a review pass turns into the most expensive step in the loop for no added confidence.
 
 Do not:
 
@@ -76,6 +88,8 @@ No ledger. No workspace directory. No "rulings" writeups by default.
 
 Every dispatched subagent still returns one short, fixed-shape block instead of free prose — the report contract: **status** (done / blocked / needs-context), what it touched (files or commits), a one-line test/verification result, and any concern worth flagging. This is what lets the dispatcher decide fix-or-move-on without re-reading the subagent's full transcript. If the content is too large to paste back safely (a full diff, a long log), the block just points at the file instead of inlining it.
 
+**blocked means blocked.** If an operation is denied — a sandbox restriction, a permission gate, a safety check — the subagent reports `blocked` and stops. Finding a different tool, host, or execution context that achieves the same effect and running it anyway is not a resolution, even if the outcome turns out harmless. The dispatcher decides what happens next, not the subagent.
+
 A normal todo list — one line per task, done or not-done — is enough to track this for a single session.
 
 If, and only if, the work genuinely spans multiple sessions and would otherwise lose track of what's done, use `lie-continuity`'s `.lie/state.md` — record each completed task's report-contract summary under Changed Files / Remaining Work. Don't invent a second status-tracking mechanism alongside it.
@@ -90,4 +104,4 @@ This sub-skill does not redefine the final whole-change review — that's owned 
 
 ## Principle
 
-> **Dispatch only when isolation pays for itself. Use the cheapest model that can do the job. Batch mechanical work. Review once per task, not once per round. Track progress in a todo list, not a ledger.**
+> **Dispatch only when isolation pays for itself — in code, context, and shared runtime resources. Use the cheapest model that can do the job. Batch mechanical work; keep tiny low-risk edits inline. Review once per task or once per batch, not once per round. Blocked means blocked — never route around a denial. Track progress in a todo list, not a ledger.**
