@@ -64,15 +64,22 @@ triggered by every change, it's a targeted check for the surfaces above.
 1. Identify what security impact the change could have.
 2. Run the relevant checklist items above.
 3. Verify secure behavior — evidence, not assumption (a passing auth check you actually ran,
-   not "should be fine").
+   not "should be fine"). For auth/authz-shaped changes, evidence typically looks like:
+   unauthorized request rejected, authenticated-but-unauthorized request rejected, authorized
+   request succeeds, invalid/expired token rejected, malformed input safely rejected — use
+   whichever of these apply to what the change actually touches, not all of them by default.
 4. Note meaningful findings; fix what's in scope.
 5. If a security decision can't be made safely without more context or carries real
    consequence if wrong (e.g. a genuinely ambiguous authorization boundary), escalate to the
    user rather than guess.
+6. Do not expand a targeted security check into unrelated security hardening or a general
+   vulnerability audit — stay on the boundary the change actually touches.
 
 This escalates the change to at least the shared risk list's "high risk" review depth in
 `lie-review` — it doesn't replace that review, it's the specific content of it for
-security-triggered work.
+security-triggered work. `lie-review` remains the review authority and `lie-testing` remains
+the testing authority; `lie-security` supplies security-specific checklist content and
+evidence into those, it does not create its own independent review or testing phase.
 
 ---
 
